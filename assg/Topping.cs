@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace PRG_Assignment
 {
-    internal class Topping
+    class Topping
     {
+        public string type { get; set; }
+        public Topping() { }
+        public Topping(string t)
+        {
+            type = t;
+        }
+        public override string ToString()
+        {
+            return "";
+        }
     }
+
 }

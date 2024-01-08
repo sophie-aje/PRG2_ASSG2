@@ -16,6 +16,17 @@ namespace assg
         public List<Topping> toppings { get; set; }
 
         public IceCream() { }
-
+        public IceCream(string o, int s, List<Flavour> f, List<Topping> t)
+        {
+            option = o;
+            scoops = s;
+            flavours = f;
+            toppings = t;
+        }
+        public override string ToString()
+        {
+            return $"{option}\t{scoops}\t{flavours}\t{toppings}";
+        }
     }
+
 }

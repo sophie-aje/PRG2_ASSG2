@@ -70,6 +70,21 @@ namespace assg
                     price = 9.50;
                 }
             }
+            else
+            { 
+                if (scoops == 1)
+                {
+                    price = 7.00;
+                }
+                else if (scoops == 2)
+                {
+                    price = 8.50;
+                }
+                else if (scoops == 3)
+                {
+                    price = 9.50;
+                }
+            }
 
 
         }

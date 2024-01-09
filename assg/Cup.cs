@@ -16,5 +16,15 @@ namespace assg
             flavours = f;
             toppings = t;
         }
+
+        public override double CalculatePrice()
+        {
+
+        }
+
+        public override string ToString()
+        {
+            return "";
+        }
     }
 }

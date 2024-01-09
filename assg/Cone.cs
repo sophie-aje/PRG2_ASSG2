@@ -2,7 +2,9 @@
 
 public class Class1
 {
-	public Class1()
+	class Cone
 	{
-	}
+		public bool dipped { get; set; }
+		public Cone() { }
+
 }

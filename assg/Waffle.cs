@@ -22,72 +22,23 @@ namespace assg
         }
         public override double CalculatePrice(double price)
         {
-            if (waffleFlavour == "Pandan")
+            price = 7.0;
+            if (waffleFlavour == "Pandan" || waffleFlavour == "Red velvet" || waffleFlavour == "Charcoal")
             {
                 price += 3.0;
-                if (scoops == 1)
-                {
-                    price = 7.00;
-                }
-                else if (scoops == 2)
-                {
-                    price = 8.50;
-                }
-                else if (scoops == 3)
-                {
-                    price = 9.50;
-                }
-            }
-            else if (waffleFlavour == "Red velvet")
-            {
-                price += 3.0;
-                if (scoops == 1)
-                {
-                    price = 7.00;
-                }
-                else if (scoops == 2)
-                {
-                    price = 8.50;
-                }
-                else if (scoops == 3)
-                {
-                    price = 9.50;
-                }
-            }
-            else if (waffleFlavour == "Charcoal")
-            {
-                price += 3.0;
-                if (scoops == 1)
-                {
-                    price = 7.00;
-                }
-                else if (scoops == 2)
-                {
-                    price = 8.50;
-                }
-                else if (scoops == 3)
-                {
-                    price = 9.50;
-                }
-            }
-            else
-            { 
-                if (scoops == 1)
-                {
-                    price = 7.00;
-                }
-                else if (scoops == 2)
-                {
-                    price = 8.50;
-                }
-                else if (scoops == 3)
-                {
-                    price = 9.50;
-                }
             }
 
-
+            if (scoops == 2)
+            {
+                price += 3.0;
+            }
+            else if (scoops == 3)
+            {
+                price += 3.0;
+            }
+            return price;
         }
+        
         public override string ToString()
         {
             return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{waffleFlavour}";

@@ -20,9 +20,10 @@ namespace assg
             dipped = d;
         }
 
-        price = 0.00;
-        public override double CalculatePrice()
+        
+        public override double CalculatePrice(double price)
         {
+            price = 0.00;
             if (dipped = True)
             {
                 price = price + 2

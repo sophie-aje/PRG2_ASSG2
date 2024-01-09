@@ -23,6 +23,10 @@ namespace assg
             flavours = f;
             toppings = t;
         }
+        public double CalculatePrice()
+        {
+
+        }
         public override string ToString()
         {
             return $"{option}\t{scoops}\t{flavours}\t{toppings}";

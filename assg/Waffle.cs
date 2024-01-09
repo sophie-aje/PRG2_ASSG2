@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace assg
 {
-    internal class Waffle:IceCream
+    class Waffle : IceCream
     {
         public string waffleFlavour { get; set; }
 
-        public Waffle() { } 
+        public Waffle() { }
 
-        public Waffle(string wf, int s, List<Flavour> t, List<Topping> f, string o)
+        public Waffle(string o, int s, List<Flavour> f, List<Topping> t, string wf)
         {
-            waffleFlavour = wf;
-            scoops = s;
-            toppings = t;
-            flavours = f;
             option = o;
+            scoops = s;
+            flavours = f;
+            toppings = t;
+            waffleFlavour = wf;
         }
         public override double CalculatePrice()
         {

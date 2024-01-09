@@ -22,12 +22,16 @@ namespace assg
 
         public override double CalculatePrice()
         {
-
+            double price = 0;   
+            if (dipped = True)
+            {
+                price = price + 2
+            }
         }
 
         public override string ToString()
         {
-            return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{dipped}";
+            return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{CalculatePrice()}";
         }
     }
 }

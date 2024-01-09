@@ -11,11 +11,12 @@ namespace assg
         public int points { get; set; }
         public int punchCard { get; set; }
         public string tier { get; set; }
+
         public PointCard() { }
-        public PointCard(int Points, int PunchCard)
+        public PointCard(int po, int pu)
         {
-            points = Points;
-            punchCard = PunchCard;
+            points = po;
+            punchCard = pu;
         }
         public void AddPoints(int add)
         {
@@ -24,14 +25,14 @@ namespace assg
 
         public void RedeemPoints(int redeem)
         {
-            points = points + redeem;
+            points = points - redeem;
         }
 
         public void Punch() { }
 
         public override string ToString()
         {
-            return "";
+            return $"";
         }
 
     }

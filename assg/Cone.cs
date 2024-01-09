@@ -27,7 +27,7 @@ namespace assg
 
         public override string ToString()
         {
-            return "";
+            return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{dipped}";
         }
     }
 }

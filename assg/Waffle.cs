@@ -9,7 +9,9 @@ namespace assg
     internal class Waffle:IceCream
     {
         public string waffleFlavour { get; set; }
+
         public Waffle() { } 
+
         public Waffle(string wf, int s, List<Flavour> t, List<Topping> f, string o)
         {
             waffleFlavour = wf;

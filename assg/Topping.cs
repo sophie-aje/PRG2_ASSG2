@@ -16,8 +16,7 @@ namespace assg
         }
         public override string ToString()
         {
-            return "";
+            return $"{type}";
         }
     }
-
 }

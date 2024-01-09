@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class Class1
+namespace assg
 {
-	class Cone
+	class Cone : IceCream
 	{
 		public bool dipped { get; set; }
 		public Cone() { }
-
+	}
 }

@@ -25,8 +25,6 @@ namespace assg
         }
         public abstract double CalculatePrice();
         
-
-        
         public override string ToString()
         {
             return $"{option}\t{scoops}\t{flavours}\t{toppings}";

@@ -30,8 +30,10 @@ namespace assg
         }
         public bool IsBirthday()
         {
-            if ()
-            { return true; } 
+            if (dob = DateTime.Now)
+            { 
+                return true;
+            } 
             else
             { 
                 return false;
@@ -39,7 +41,7 @@ namespace assg
         }
         public override string ToString()
         {
-            return ____;
+            return $"{name}\t{memberId}\t{dob}";
         }
     }
 }

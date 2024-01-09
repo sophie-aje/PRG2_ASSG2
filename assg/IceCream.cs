@@ -14,6 +14,7 @@ namespace assg
         = new List<Flavour>();
 
         public List<Topping> toppings { get; set; }
+        = new List<Topping>();
 
         public IceCream() { }
         public IceCream(string o, int s, List<Flavour> f, List<Topping> t)

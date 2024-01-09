@@ -11,8 +11,8 @@ namespace assg
         public int Id { get; set; }
 
         public DateTime timeRecieved { get; set; }
-        public DateTime? timeFuffilled { get; set; }
-        public List<IceCream> iceCreamList { get; set; }
+        public DateTime? timeFulffilled { get; set; }
+        public List<IceCream> iceCreamList { get; set; } = new List<IceCream>();
         public Order() { }
         public Order(int i, DateTime tr)
         {
@@ -38,7 +38,7 @@ namespace assg
         }
         public override string ToString()
         {
-            return $"{Id}\t{timeRecieved}\t{timeFuffilled}";
+            return $"{Id}\t{timeRecieved}\t{timeFulffilled}";
         }
     }
 }

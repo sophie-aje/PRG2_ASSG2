@@ -10,10 +10,9 @@ namespace assg
     {
         public string option { get; set; }
         public int scoops { get; set; }
-        public List<Flavour> flavours { get; set; }
-        = new List<Flavour>();
+        public List<Flavour> flavours { get; set; } = new List<Flavour>();
 
-        public List<Topping> toppings { get; set; }
+        public List<Topping> toppings { get; set; } = new List<Topping>();
 
         public IceCream() { }
         public IceCream(string o, int s, List<Flavour> f, List<Topping> t)

@@ -23,18 +23,4 @@ namespace assg
             return $"{type}\t{premium}\t{quantity}";
         }
     }
-    class Topping
-    {
-        public string type { get; set; }
-        public Topping() { }
-        public Topping(string t)
-        {
-            type = t;
-        }
-        public override string ToString()
-        {
-            return $"{type}";
-        }
-
-    }
 }

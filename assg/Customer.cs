@@ -13,7 +13,7 @@ namespace assg
         public DateTime dob { get; set; }
         public Order currentOrder { get; set; }
 
-        public List<Order> orderHistory { get; set; }
+        public List<Order> orderHistory { get; set; } = new List<Order>();
 
         public PointCard rewards { get; set; }
 

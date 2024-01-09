@@ -40,7 +40,7 @@ namespace assg
         }
         public override string ToString()
         {
-            return $"{Id}\t{timeRecieved}\t{timeFulfilled}";
+            return $"{Id}\t{timeRecieved}\t{timeFuffilled}";
         }
     }
 }

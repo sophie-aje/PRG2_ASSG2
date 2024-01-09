@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace assg
 {
-	class Cone : IceCream
-	{
-		public bool dipped { get; set; }
-		public Cone() { }
+    class Cone : IceCream
+    {
+        public bool dipped { get; set; }
+        public Cone() { }
 
         public Cone(string o, int s, List<Flavour> f, List<Topping> t, bool d)
         {

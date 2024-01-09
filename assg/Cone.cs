@@ -10,5 +10,19 @@ namespace assg
 	{
 		public bool dipped { get; set; }
 		public Cone() { }
-	}
+
+        public Cone(bool d, int s, List<Flavour> t, List<Topping> f, string o)
+        {
+            dipped = d;
+            scoops = s;
+            toppings = t;
+            flavours = f;
+            option = o;
+        }
+
+        public override double CalculatePrice()
+        {
+
+        }
+    }
 }

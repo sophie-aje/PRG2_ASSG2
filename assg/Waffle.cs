@@ -22,22 +22,56 @@ namespace assg
         }
         public override double CalculatePrice(double price)
         {
-            if (scoops == 1)
+            if (waffleFlavour == "Pandan")
             {
-                price = 7.00;
+                price += 3.0;
+                if (scoops == 1)
+                {
+                    price = 7.00;
+                }
+                else if (scoops == 2)
+                {
+                    price = 8.50;
+                }
+                else if (scoops == 3)
+                {
+                    price = 9.50;
+                }
             }
-            else if (scoops == 2)
+            else if (waffleFlavour == "Red velvet")
             {
-                price = 8.50;
+                price += 3.0;
+                if (scoops == 1)
+                {
+                    price = 7.00;
+                }
+                else if (scoops == 2)
+                {
+                    price = 8.50;
+                }
+                else if (scoops == 3)
+                {
+                    price = 9.50;
+                }
             }
-            else if (scoops == 3)
+            else if (waffleFlavour == "Charcoal")
             {
-                price = 9.50;
+                price += 3.0;
+                if (scoops == 1)
+                {
+                    price = 7.00;
+                }
+                else if (scoops == 2)
+                {
+                    price = 8.50;
+                }
+                else if (scoops == 3)
+                {
+                    price = 9.50;
+                }
             }
-            else if (waffleFlavour == 'Pandan', 'charcoal','red velvet')
-            {
-                price += 3.00;
-            }
+
+
         }
         public override string ToString()
         {

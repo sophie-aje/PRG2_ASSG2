@@ -45,49 +45,6 @@ namespace assg
 
         }
     }
-    class Cone : IceCream
-    {
-        public bool dipped { get; set; }
-        public Cone() { }
 
-        public Cone(string o, int s, List<Flavour> f, List<Topping> t, bool d)
-        {
-            option = o;
-            scoops = s;
-            flavours = f;
-            toppings = t;
-            dipped = d;
-        }
 
-        public override double CalculatePrice()
-        {
-
-        }
-
-        public override string ToString()
-        {
-            return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{dipped}";
-        }
-    }
-    class Cup : IceCream
-    {
-        public Cup() { }
-        public Cup(string o, int s, List<Flavour> f, List<Topping> t)
-        {
-            option = o;
-            scoops = s;
-            flavours = f;
-            toppings = t;
-        }
-
-        public override double CalculatePrice()
-        {
-
-        }
-
-        public override string ToString()
-        {
-            return $"{option}\t{scoops}\t{flavours}\t{toppings}";
-        }
-    }
 }

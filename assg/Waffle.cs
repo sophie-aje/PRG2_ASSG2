@@ -45,7 +45,7 @@ namespace assg
 
         }
     }
-    class Cone: IceCream
+    class Cone : IceCream
     {
         public bool dipped { get; set; }
         public Cone() { }
@@ -66,12 +66,12 @@ namespace assg
 
         public override string ToString()
         {
-            return $"{base.ToString()}\t{dipped}";
+            return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{dipped}";
         }
     }
-    class Cup: IceCream
+    class Cup : IceCream
     {
-		public Cup() { }
+        public Cup() { }
         public Cup(string o, int s, List<Flavour> f, List<Topping> t)
         {
             option = o;
@@ -79,13 +79,15 @@ namespace assg
             flavours = f;
             toppings = t;
         }
+
         public override double CalculatePrice()
         {
-            
+
         }
+
         public override string ToString()
         {
-            return base.ToString();
+            return $"{option}\t{scoops}\t{flavours}\t{toppings}";
         }
     }
 }

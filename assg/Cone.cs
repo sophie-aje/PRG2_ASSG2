@@ -10,5 +10,24 @@ namespace assg
 	{
 		public bool dipped { get; set; }
 		public Cone() { }
-	}
+
+        public Cone(string o, int s, List<Flavour> f, List<Topping> t, bool d)
+        {
+            option = o;
+            scoops = s;
+            flavours = f;
+            toppings = t;
+            dipped = d;
+        }
+
+        public override double CalculatePrice()
+        {
+
+        }
+
+        public override string ToString()
+        {
+            return "";
+        }
+    }
 }

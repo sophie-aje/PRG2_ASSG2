@@ -27,14 +27,17 @@ namespace assg
             {
                 price += 3.0;
             }
-
-            if (scoops == 2)
+            if (scoops == 1)
             {
-                price += 3.0;
+                price += 0.0;
+            }
+            else if (scoops == 2)
+            {
+                price += 1.5;
             }
             else if (scoops == 3)
             {
-                price += 3.0;
+                price += 2.5;
             }
             return price;
         }

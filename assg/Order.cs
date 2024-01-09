@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace assg
 {
-    internal class Order
+    class Order
     {
         public int Id { get; set; }
 
         public DateTime timeRecieved { get; set; }
-        public DateTime? timeFuffilled { get; set; }
+        public DateTime? timeFulfilled { get; set; }
         public List<IceCream> iceCreamList { get; set; }
+        = new List<IceCream>();
+
         public Order() { }
         public Order(int i, DateTime tr)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace assg
 {
-    class IceCream
+    abstract class IceCream
     {
         public string option { get; set; }
         public int scoops { get; set; }
@@ -23,10 +23,10 @@ namespace assg
             flavours = f;
             toppings = t;
         }
-        public double CalculatePrice()
-        {
+        public abstract double CalculatePrice();
+        
 
-        }
+        
         public override string ToString()
         {
             return $"{option}\t{scoops}\t{flavours}\t{toppings}";

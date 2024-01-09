@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace PRG_Assignment
 {
-    internal class PointCard
+    class PointCard
     {
+
     }
 }

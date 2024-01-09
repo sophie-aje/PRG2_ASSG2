@@ -26,9 +26,7 @@ namespace assg
         }
         public override string ToString()
         {
-            return base.ToString() + 
-                "Waffle Flavour: " + waffleFlavour;
-
+            return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{waffleFlavour}";
         }
     }
 }

@@ -24,11 +24,13 @@ namespace assg
         public override double CalculatePrice(double price)
         {
             price = 0.00;
-            if (dipped = True)
+            if (dipped == true)
             {
-                price = price + 2
+                price += 2;
             }
+            
         }
+        
 
         public override string ToString()
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace assg
 {
-    class Waffle : IceCream
+    class Waffle : IceCream, IComparable<Waffle>
     {
         public string waffleFlavour { get; set; }
 
@@ -40,6 +40,10 @@ namespace assg
                 price += 2.5;
             }
             return price;
+        }
+        public int CompareTo(Waffle w)
+        {
+            return CalculatePrice().CompareTo(w.CalculatePrice());
         }
         
         public override string ToString()

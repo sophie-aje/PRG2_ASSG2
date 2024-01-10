@@ -22,5 +22,6 @@ namespace assg
         {
             return $"{type}\t{premium}\t{quantity}";
         }
+
     }
 }

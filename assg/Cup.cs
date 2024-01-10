@@ -10,6 +10,7 @@ namespace assg
     {
         public Cup() { }
         public Cup(string o, int s, List<Flavour> f, List<Topping> t)
+        : base(o, s, f, t)
         {
             option = o;
             scoops = s;
@@ -19,7 +20,22 @@ namespace assg
 
         public override double CalculatePrice()
         {
+            double base_price = 0;
+            if (scoops == 1)
+            {
+                base_price = 4;
+            }
+            else if (scoops == 2)
+            {
+                base_price = 5.5;
+            }
+            else if (scoops == 2)
+            {
+                base_price = 6.5;
+            }
 
+            double total_price = base_price + (toppings.Count * 1);
+            return total_price;
         }
 
         public override string ToString()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace assg
 {
-    class Waffle : IceCream, IComparable<Waffle>
+    class Waffle : IceCream
     {
         public string waffleFlavour { get; set; }
 
@@ -22,72 +22,32 @@ namespace assg
         }
         public override double CalculatePrice()
         {
-            if (waffleFlavour == "Pandan")
+            double base_price = 0;
+            if (scoops == 1)
             {
-                price += 3.0;
-                if (scoops == 1)
-                {
-                    price = 7.00;
-                }
-                else if (scoops == 2)
-                {
-                    price = 8.50;
-                }
-                else if (scoops == 3)
-                {
-                    price = 9.50;
-                }
+                base_price = 4;
             }
-            else if (waffleFlavour == "Red velvet")
+            else if (scoops == 2)
             {
-                price += 3.0;
-                if (scoops == 1)
-                {
-                    price = 7.00;
-                }
-                else if (scoops == 2)
-                {
-                    price = 8.50;
-                }
-                else if (scoops == 3)
-                {
-                    price = 9.50;
-                }
+                base_price = 5.5;
             }
-            else if (waffleFlavour == "Charcoal")
+            else if (scoops == 2)
             {
-                price += 3.0;
-                if (scoops == 1)
-                {
-                    price = 7.00;
-                }
-                else if (scoops == 2)
-                {
-                    price = 8.50;
-                }
-                else if (scoops == 3)
-                {
-                    price = 9.50;
-                }
-            }
-            else
-            { 
-                if (scoops == 1)
-                {
-                    price = 7.00;
-                }
-                else if (scoops == 2)
-                {
-                    price = 8.50;
-                }
-                else if (scoops == 3)
-                {
-                    price = 9.50;
-                }
+                base_price = 6.5;
             }
 
+            double wf_price = 0;
+            
 
+            if (waffleFlavour == "Red Velvet" || waffleFlavour == "Charcoal" || waffleFlavour == "Pandan")
+            {
+                wf_price = 3;
+            }
+            double total_price = base_price + (toppings.Count * 1) + wf_price ;
+            return total_price;
         }
+
+
         public override string ToString()
         {
             return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{waffleFlavour}";

@@ -30,7 +30,7 @@ namespace assg
         }
         public bool IsBirthday()
         {
-            if (dob = DateTime.Now)
+            if (dob == DateTime.Now)
             { 
                 return true;
             } 

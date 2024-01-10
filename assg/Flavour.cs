@@ -18,6 +18,8 @@ namespace assg
             premium = p;
             quantity = q;
         }
+
+        
         public override string ToString()
         {
             return $"{type}\t{premium}\t{quantity}";

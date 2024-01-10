@@ -26,8 +26,10 @@ namespace assg
         }
         public Order MakeOrder()
         {
-            return "";
+            Order newOrder = new Order();
+            return newOrder;
         }
+
         public bool IsBirthday()
         {
             if (dob == DateTime.Now)

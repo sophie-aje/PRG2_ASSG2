@@ -10,7 +10,7 @@ namespace assg
     {
         public int Id { get; set; }
 
-        public DateTime timeRecieved { get; set; }
+        public DateTime timeReceived { get; set; }
         public DateTime? timeFulfilled { get; set; }
         public List<IceCream> iceCreamList { get; set; }
         = new List<IceCream>();
@@ -19,28 +19,33 @@ namespace assg
         public Order(int i, DateTime tr)
         {
             Id = i;
-            timeRecieved = tr;
+            timeReceived = tr;
         }
-        public ModifyIceCream()
+        public void ModifyIceCream(int m)
         {
-
+            iceCreamList.RemoveAt(m);
         }
-        public AddedIceCream(IceCream addic)
+        public void AddIceCream(IceCream addic)
         {
             iceCreamList.Add(addic);
             
         }
-        public DeleteIceCream(int )
+        public void DeleteIceCream(int d)
         {
-
+            iceCreamList.RemoveAt(d);
         }
         public double CalculateTotal()
         {
-
+            double total_ic_price = 0;
+            foreach(IceCream ice in iceCreamList)
+            {
+                total_ic_price += ice.CalculatePrice();
+            }
+            return total_ic_price;
         }
         public override string ToString()
         {
-            return $"{Id}\t{timeRecieved}\t{timeFuffilled}";
+            return $"{Id}\t{timeReceived}\t{timeFulfilled}";
         }
     }
 }

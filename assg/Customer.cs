@@ -9,7 +9,7 @@ namespace assg
     class Customer
     {
         public string name {  get; set; }
-        public int memberid { get; set; }
+        public int memberId { get; set; }
         public DateTime dob { get; set; }
         public Order currentOrder { get; set; }
 
@@ -21,12 +21,12 @@ namespace assg
         public Customer (string n, int mid, DateTime d)
         {
             name = n;
-            memberid = mid;
+            memberId = mid;
             dob = d;
         }
         public Order MakeOrder()
         {
-
+            return "";
         }
         public bool IsBirthday()
         {

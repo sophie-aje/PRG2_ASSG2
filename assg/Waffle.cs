@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace assg
 {
-    class Waffle : IceCream, IComparable<Waffle>
+    class Waffle : IceCream
     {
         public string waffleFlavour { get; set; }
 
@@ -20,37 +20,48 @@ namespace assg
             toppings = t;
             waffleFlavour = wf;
         }
-        public override double CalculatePrice(double price)
+        public override double CalculatePrice()
         {
-            price = 7.0;
-            if (waffleFlavour == "Pandan" || waffleFlavour == "Red velvet" || waffleFlavour == "Charcoal")
-            {
-                price += 3.0;
-            }
+            double base_price = 0;
             if (scoops == 1)
             {
-                price += 0.0;
+                base_price = 4;
             }
             else if (scoops == 2)
             {
-                price += 1.5;
+                base_price = 5.5;
             }
-            else if (scoops == 3)
+            else if (scoops == 2)
             {
-                price += 2.5;
+                base_price = 6.5;
             }
-            return price;
+
+            double wf_price = 0;
+
+            double prem = 0;
+            foreach (var flavour in flavours)
+            {
+                if (flavour.premium)
+                {
+                    prem += 2;
+                }
+            }
+
+            if (waffleFlavour == "Red Velvet" || waffleFlavour == "Charcoal" || waffleFlavour == "Pandan")
+            {
+                wf_price = 3;
+            }
+            double total_price = base_price + (toppings.Count * 1) + wf_price + prem;
+            return total_price;
         }
-        public int CompareTo(Waffle w)
-        {
-            return CalculatePrice().CompareTo(w.CalculatePrice());
-        }
-        
+
+
         public override string ToString()
         {
             return $"{option}\t{scoops}\t{flavours}\t{toppings}\t{waffleFlavour}";
         }
     }
+
 
 
 }

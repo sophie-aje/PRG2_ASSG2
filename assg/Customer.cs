@@ -8,8 +8,8 @@ namespace assg
 {
     class Customer
     {
-        public string name {  get; set; }
-        public int memberid { get; set; }
+        public string name { get; set; }
+        public int memberId { get; set; }
         public DateTime dob { get; set; }
         public Order currentOrder { get; set; }
 
@@ -18,24 +18,26 @@ namespace assg
         public PointCard rewards { get; set; }
 
         public Customer() { }
-        public Customer (string n, int mid, DateTime d)
+        public Customer(string n, int mid, DateTime d)
         {
             name = n;
-            memberid = mid;
+            memberId = mid;
             dob = d;
         }
         public Order MakeOrder()
         {
-
+            Order newOrder = new Order();
+            return newOrder;
         }
+
         public bool IsBirthday()
         {
             if (dob == DateTime.Now)
-            { 
+            {
                 return true;
-            } 
+            }
             else
-            { 
+            {
                 return false;
             }
         }

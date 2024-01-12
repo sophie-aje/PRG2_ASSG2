@@ -8,6 +8,7 @@ namespace assg
 {
     class Cone : IceCream
     {
+
         public bool dipped { get; set; }
         public Cone() { }
 
@@ -20,17 +21,42 @@ namespace assg
             dipped = d;
         }
 
-        
-        public override double CalculatePrice(double price)
+
+        public override double CalculatePrice()
         {
-            price = 0.00;
-            if (dipped == true)
+            double base_price = 0;
+            if (scoops == 1)
             {
-                price += 2;
+                base_price = 4;
             }
-            
+            else if (scoops == 2)
+            {
+                base_price = 5.5;
+            }
+            else if (scoops == 2)
+            {
+                base_price = 6.5;
+            }
+            double dip = 0;
+            if (dipped)
+            {
+                dip = 2;
+            }
+
+            double prem = 0;
+            foreach (var flavour in flavours)
+            {
+                if (flavour.premium)
+                {
+                    prem += 2;
+                }
+            }
+
+            double total_price = base_price + (toppings.Count * 1) + dip + prem;
+
+            return total_price;
         }
-        
+
 
         public override string ToString()
         {

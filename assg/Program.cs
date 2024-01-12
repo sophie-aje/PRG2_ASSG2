@@ -5,6 +5,7 @@ void DisplayMenu()
         try
         {
 
+<<<<<<< HEAD
             Console.WriteLine("The I.C. Treats Management System (enter 0 to break)");
             Console.WriteLine("=================================");
             Console.WriteLine("[1] List all customers");
@@ -59,3 +60,8 @@ void DisplayMenu()
 }
 
 DisplayMenu();
+=======
+
+
+
+>>>>>>> 2f912b8ace8921aa428ffc72e2a4129fb5a7843e

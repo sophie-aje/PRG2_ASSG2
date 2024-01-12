@@ -39,6 +39,7 @@ namespace assg
             double wf_price = 0;
 
             double prem = 0;
+
             foreach (var flavour in flavours)
             {
                 if (flavour.premium)

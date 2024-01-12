@@ -51,7 +51,7 @@ namespace assg
             {
                 wf_price = 3;
             }
-            double total_price = base_price + (toppings.Count * 1) + wf_price + prem;
+            double total_price = base_price + (toppings.Count * 1) + wf_price + prem ;
             return total_price;
         }
 

@@ -8,7 +8,7 @@ namespace assg
 {
     class Customer
     {
-        public string name { get; set; }
+        public string name {  get; set; }
         public int memberId { get; set; }
         public DateTime dob { get; set; }
         public Order currentOrder { get; set; }

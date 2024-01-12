@@ -1,3 +1,7 @@
+//basic features
+//nehaa: option 1,3,4
+//sophie: option 2,5,6
+
 void DisplayMenu()
 {
     while (true)
@@ -60,3 +64,30 @@ void DisplayMenu()
 }
 
 DisplayMenu();
+
+//---BASIC FEATURES---
+//Option 1: 
+void Option1()
+{
+
+
+}
+
+//Option 2: 
+
+
+//Option 3: 
+
+
+//Option 4: 
+
+
+//Option 5: 
+
+
+//Option 6: 
+
+
+
+
+

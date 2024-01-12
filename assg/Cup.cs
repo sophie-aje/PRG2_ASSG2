@@ -33,8 +33,16 @@ namespace assg
             {
                 base_price = 6.5;
             }
+            double prem = 0;
+            foreach (var flavour in flavours)
+            {
+                if (flavour.premium)
+                {
+                    prem += 2;
+                }
+            }
 
-            double total_price = base_price + (toppings.Count * 1);
+            double total_price = base_price + (toppings.Count * 1) + prem;
             return total_price;
         }
 

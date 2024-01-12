@@ -37,13 +37,21 @@ namespace assg
             }
 
             double wf_price = 0;
-            
+
+            double prem = 0;
+            foreach (var flavour in flavours)
+            {
+                if (flavour.premium)
+                {
+                    prem += 2;
+                }
+            }
 
             if (waffleFlavour == "Red Velvet" || waffleFlavour == "Charcoal" || waffleFlavour == "Pandan")
             {
                 wf_price = 3;
             }
-            double total_price = base_price + (toppings.Count * 1) + wf_price ;
+            double total_price = base_price + (toppings.Count * 1) + wf_price + prem ;
             return total_price;
         }
 

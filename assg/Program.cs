@@ -116,7 +116,23 @@ void Option3()
     //create pointcard object
     PointCard pointCard = new PointCard(0,0);
 
-    //assign pointcard to customer
+    //assign the PointCard to Customer
+    customer1.rewards = pointCard1;
+
+    //append customer info into customers csv file
+    string memstatus = "Silver";
+    List<string> newlist = new List<string> { name, id, dob, memstatus, 0, 0};
+    using (StreamWriter sw = new StreamWriter("WriteLines2.txt", false))
+    {
+        foreach (string s in newlist)
+        {
+            sw.WriteLine(s);
+        }
+
+        Console.WriteLine("Registration status: SUCCESSFUL");
+    }
+
+
 
 
 

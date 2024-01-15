@@ -33,7 +33,7 @@ void DisplayMenu()
             }
             else if (option == 3)
             {
-                
+                Option3();                
             }
             else if (option == 4)
             {
@@ -139,7 +139,40 @@ void Option3()
 }
 
 //Option 4: 
+void Option4()
+{
+    //list customers from customer.csv
+    List<Customer> customerList = new List<Customer>();
+    using (StreamReader sr = new StreamReader("customers.csv"))
+    {
+        string? s = sr.ReadLine(); // read the heading
+                                   // display the heading
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] info = s.Split(',');
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}",
+                info[0], info[1], info[2], info[3], info[4], info[5]);
+            string c_name = info[0];
+            string c_id = info[1];
+            DateTime c_dob = info[2];
+            Customer customer = new Customer(c_name, c_id, c_dob-dob);
+            customerList.Add(customer);
+        }
+    }
 
+    //prompt user to select customer and retrieve selected customer
+    Console.Write("Select a customer (enter Customer ID) : ");
+    strig cus_id = Console.ReadLine();
+
+    foreach (var x in Customer)
+    {
+        if (x.id == cus_id)
+        {
+
+        }
+
+    }
+}
 
 //Option 5: 
 

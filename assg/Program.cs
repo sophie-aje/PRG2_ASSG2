@@ -105,10 +105,20 @@ void Option3()
     string name = Console.ReadLine();
 
     Console.Write("Enter customer ID number: ");
-    string id = Console.ReadLine();
+    int id = Convert.ToInt32(Console.ReadLine());
 
     Console.Write("Enter customer data of birth: ");
-    DateTime dob = Console.ReadLine();
+    string dobString = Console.ReadLine();
+    DateTime dob;
+
+    if (DateTime.TryParse(dobString, out dob))
+    {
+        Console.WriteLine($"Date of Birth: {dob}");
+    }
+    else
+    {
+        Console.WriteLine("Invalid date format.");
+    }
 
     //create customer object
     Customer customer = new Customer(name, id, dob);
@@ -117,25 +127,21 @@ void Option3()
     PointCard pointCard = new PointCard(0,0);
 
     //assign the PointCard to Customer
-    customer1.rewards = pointCard1;
+    customer.rewards = pointCard;
 
     //append customer info into customers csv file
     string memstatus = "Silver";
-    List<string> newlist = new List<string> { name, id, dob, memstatus, 0, 0};
-    using (StreamWriter sw = new StreamWriter("WriteLines2.txt", false))
+    string sid = Convert.ToString(id);
+
+    List<string> newlist = new List<string> { name, sid, dobString, memstatus, "0", "0"};
+    using (StreamWriter sw = new StreamWriter("customers.csv", false))
     {
         foreach (string s in newlist)
         {
             sw.WriteLine(s);
         }
-
         Console.WriteLine("Registration status: SUCCESSFUL");
     }
-
-
-
-
-
 }
 
 //Option 4: 
@@ -154,19 +160,33 @@ void Option4()
                 info[0], info[1], info[2], info[3], info[4], info[5]);
             string c_name = info[0];
             string c_id = info[1];
-            DateTime c_dob = info[2];
-            Customer customer = new Customer(c_name, c_id, c_dob-dob);
+
+            string dobString = info[2];
+
+            DateTime c_dob;
+
+            if (DateTime.TryParse(dobString, out c_dob))
+            {
+                Console.WriteLine($"Date of Birth: {c_dob}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid date format.");
+            }
+
+            int id = Convert.ToInt32(c_id);
+            Customer customer = new Customer(c_name, id, c_dob);
             customerList.Add(customer);
         }
     }
 
     //prompt user to select customer and retrieve selected customer
     Console.Write("Select a customer (enter Customer ID) : ");
-    strig cus_id = Console.ReadLine();
+    int cus_id = Convert.ToInt32(Console.ReadLine());
 
-    foreach (var x in Customer)
+    foreach (var x in customerList)
     {
-        if (x.id == cus_id)
+        if (x.memberId == cus_id)
         {
             
         }

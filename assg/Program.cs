@@ -81,14 +81,14 @@ void Option1()
         if (s != null)
         {
             string[] heading = s.Split(',');
-            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}  {4,-10}  {5,-10}",
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-20}  {4,-17}  {5,-15}",
                 heading[0], heading[1], heading[2], heading[3], heading[4], heading[5]);
             // repeat until end of file
         }
         while ((s = sr.ReadLine()) != null)
         {
             string[] info = s.Split(',');
-            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}  {4,-10}  {5,-10}",
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-20}  {4,-17}  {5,-15}",
                 info[0], info[1], info[2], info[3], info[4], info[5]);
         }
     }
@@ -134,13 +134,16 @@ void Option3()
     string memstatus = "Silver";
     string sid = Convert.ToString(id);
 
-    List<string> newlist = new List<string> { name, sid, dobString, memstatus, "0", "0"};
+    List<string> newList = new List<string> { name, sid, dobString, memstatus, "0", "0" };
+
     using (StreamWriter sw = new StreamWriter("customers.csv", true))
     {
-        sw.WriteLine(newList);
-        
+        string csvLine = string.Join(",", newList);
+        sw.WriteLine(csvLine);
+
         Console.WriteLine("Registration status: SUCCESSFUL");
     }
+
 }
 
 //Option 4: 

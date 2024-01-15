@@ -81,14 +81,14 @@ void Option1()
         if (s != null)
         {
             string[] heading = s.Split(',');
-            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}",
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}  {4,-10}  {5,-10}",
                 heading[0], heading[1], heading[2], heading[3], heading[4], heading[5]);
             // repeat until end of file
         }
         while ((s = sr.ReadLine()) != null)
         {
             string[] info = s.Split(',');
-            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}",
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}  {4,-10}  {5,-10}",
                 info[0], info[1], info[2], info[3], info[4], info[5]);
         }
     }
@@ -128,6 +128,7 @@ void Option3()
 
     //assign the PointCard to Customer
     customer.rewards = pointCard;
+
 
     //append customer info into customers csv file
     string memstatus = "Silver";

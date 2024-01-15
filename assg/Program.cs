@@ -134,12 +134,10 @@ void Option3()
     string sid = Convert.ToString(id);
 
     List<string> newlist = new List<string> { name, sid, dobString, memstatus, "0", "0"};
-    using (StreamWriter sw = new StreamWriter("customers.csv", false))
+    using (StreamWriter sw = new StreamWriter("customers.csv", true))
     {
-        foreach (string s in newlist)
-        {
-            sw.WriteLine(s);
-        }
+        sw.WriteLine(newList);
+        
         Console.WriteLine("Registration status: SUCCESSFUL");
     }
 }
@@ -187,7 +185,7 @@ void Option4()
     foreach (var x in customerList)
     {
         if (x.memberId == cus_id)
-        {
+        { 
             
         }
 

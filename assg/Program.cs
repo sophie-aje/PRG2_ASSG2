@@ -37,7 +37,7 @@ void DisplayMenu()
             }
             else if (option == 4)
             {
-
+                Option4();
             }
             else if (option == 5)
             {
@@ -69,6 +69,67 @@ void DisplayMenu()
 DisplayMenu();
 
 //---BASIC FEATURES---
+
+//method to make an icecream order
+IceCream iceCreamOrder()
+{
+    Console.Write("Enter number of scoops: ");
+    int scoops = Convert.ToInt32(Console.ReadLine());
+
+    Console.Write("Enter the ice cream option: (\"1\": Cup / \"2\": Cone / \"3\": Waffle ) ");
+    string option = Console.ReadLine();
+
+    Console.Write("Enter the number of toppings: ");
+    int numberOfToppings = Convert.ToInt32(Console.ReadLine());
+
+    List<Flavour> flavours = new List<Flavour>();
+
+    for (int i = 0; i < scoops; i++)
+    {
+        Console.Write($"Enter flavour for scoop {i + 1}: ");
+        string flavourName = Console.ReadLine();
+        Flavour flavour = new Flavour();
+
+        if (flavourName == "durian" || flavourName == "ube" || flavourName == "sea salt")
+        {
+            flavour.type = flavourName;
+            flavour.premium = true;
+        }
+
+        flavours.Add(flavour);
+    }
+
+    List<Topping> toppings = new List<Topping>();
+    for (int i = 0; i < numberOfToppings; i++)
+    {
+        Console.Write($"Enter topping {i + 1}: (sprinkles/mochi/sago/oreos) ");
+        string toppingName = Console.ReadLine();
+        toppings.Add(new Topping(toppingName));
+    }
+
+    if (option == "1")
+    {
+        return new Cup(option, scoops, flavours, toppings);
+    }
+    else if (option == "2")
+    {
+        Console.Write("Do you want the cone dipped? (true/false): ");
+        bool isDipped = bool.Parse(Console.ReadLine());
+        return new Cone(option, scoops, flavours, toppings, isDipped);
+    }
+    else if (option == "3")
+    {
+        Console.Write("What waffle flavour do you want? (Original/Red Velvet/Charcoal/Pandan): ");
+        string wf = Console.ReadLine();
+        return new Waffle(option, scoops, flavours, toppings, wf);
+    }
+    else
+    {
+        Console.WriteLine("Error. Please key in options from 1 to 3.");
+        return null;
+    }
+
+}
 
 //Option 1: 
 void Option1()
@@ -158,23 +219,14 @@ void Option4()
         while ((s = sr.ReadLine()) != null)
         {
             string[] info = s.Split(',');
-            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}",
-                info[0], info[1], info[2], info[3], info[4], info[5]);
             string c_name = info[0];
             string c_id = info[1];
 
             string dobString = info[2];
 
             DateTime c_dob;
-
-            if (DateTime.TryParse(dobString, out c_dob))
-            {
-                Console.WriteLine($"Date of Birth: {c_dob}");
-            }
-            else
-            {
-                Console.WriteLine("Invalid date format.");
-            }
+            DateTime.TryParse(dobString, out c_dob);
+            
 
             int id = Convert.ToInt32(c_id);
             Customer customer = new Customer(c_name, id, c_dob);
@@ -189,8 +241,25 @@ void Option4()
     foreach (var x in customerList)
     {
         if (x.memberId == cus_id)
-        { 
-            
+        {
+            List<IceCream> orderList = new List<IceCream>();
+
+            while (true)
+            {
+                Console.WriteLine("Do you want to add an ice cream order? (yes/no)");
+                string yesno = Console.ReadLine();
+
+                if (yesno == "no")
+                {
+                    break;
+                }
+                else
+                {
+                    // create new ice cream object
+                    IceCream iceCream = iceCreamOrder();
+                    orderList.Add(iceCream);
+                }
+            }
         }
 
     }

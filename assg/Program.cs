@@ -10,7 +10,7 @@ void DisplayMenu()
         {
 
 
-            Console.WriteLine("The I.C. Treats Management System (enter 0 to break)");
+            Console.WriteLine("\nThe I.C. Treats Management System (enter 0 to break)");
             Console.WriteLine("=================================");
             Console.WriteLine("[1] List all customers");
             Console.WriteLine("[2] List all current orders");
@@ -79,14 +79,14 @@ void Option1()
         if (s != null)
         {
             string[] heading = s.Split(',');
-            Console.WriteLine("{0,10}  {1,10}  {2,10}  {3,10}",
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}",
                 heading[0], heading[1], heading[2], heading[3], heading[4], heading[5]);
             // repeat until end of file
         }
         while ((s = sr.ReadLine()) != null)
         {
             string[] info = s.Split(',');
-            Console.WriteLine("{0,10}  {1,10}  {2,10}  {3,10}",
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-10}",
                 info[0], info[1], info[2], info[3], info[4], info[5]);
         }
     }

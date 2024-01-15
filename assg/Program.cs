@@ -2,6 +2,8 @@
 //nehaa: option 1,3,4
 //sophie: option 2,5,6
 
+using assg;
+
 void DisplayMenu()
 {
     while (true)
@@ -96,7 +98,29 @@ void Option1()
 
 
 //Option 3: 
+void Option3()
+{
+    //prompt user for details
+    Console.Write("Enter customer name: ");
+    string name = Console.ReadLine();
 
+    Console.Write("Enter customer ID number: ");
+    string id = Console.ReadLine();
+
+    Console.Write("Enter customer data of birth: ");
+    DateTime dob = Console.ReadLine();
+
+    //create customer object
+    Customer customer = new Customer(name, id, dob);
+
+    //create pointcard object
+    PointCard pointCard = new PointCard(0,0);
+
+    //assign pointcard to customer
+
+
+
+}
 
 //Option 4: 
 

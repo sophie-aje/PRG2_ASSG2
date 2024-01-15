@@ -80,7 +80,7 @@ void Option1()
         {
             string[] heading = s.Split(',');
             Console.WriteLine("{0,10}  {1,10}  {2,10}  {3,10}",
-                heading[0], heading[1], heading[2], heaing[3], heading[4], heading[5]);
+                heading[0], heading[1], heading[2], heading[3], heading[4], heading[5]);
             // repeat until end of file
         }
         while ((s = sr.ReadLine()) != null)

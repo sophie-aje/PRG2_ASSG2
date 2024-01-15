@@ -18,7 +18,7 @@ namespace assg
         public PointCard rewards { get; set; }
 
         public Customer() { }
-        public Customer (string n, int mid, DateTime d)
+        public Customer(string n, int mid, DateTime d)
         {
             name = n;
             memberId = mid;
@@ -33,11 +33,11 @@ namespace assg
         public bool IsBirthday()
         {
             if (dob == DateTime.Now)
-            { 
+            {
                 return true;
-            } 
+            }
             else
-            { 
+            {
                 return false;
             }
         }

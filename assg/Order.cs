@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace assg
 {
+ 
     class Order
     {
         public int Id { get; set; }
@@ -28,7 +29,7 @@ namespace assg
         public void AddIceCream(IceCream addic)
         {
             iceCreamList.Add(addic);
-            
+
         }
         public void DeleteIceCream(int d)
         {
@@ -37,7 +38,7 @@ namespace assg
         public double CalculateTotal()
         {
             double total_ic_price = 0;
-            foreach(IceCream ice in iceCreamList)
+            foreach (IceCream ice in iceCreamList)
             {
                 total_ic_price += ice.CalculatePrice();
             }
@@ -49,3 +50,4 @@ namespace assg
         }
     }
 }
+

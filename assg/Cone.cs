@@ -8,6 +8,7 @@ namespace assg
 {
     class Cone : IceCream
     {
+
         public bool dipped { get; set; }
         public Cone() { }
 
@@ -55,7 +56,7 @@ namespace assg
 
             return total_price;                       
         }
-        
+
 
         public override string ToString()
         {

@@ -29,11 +29,11 @@ void DisplayMenu()
             }
             else if (option == 2)
             {
-                
+
             }
             else if (option == 3)
             {
-                Option3();                
+                Option3();
             }
             else if (option == 4)
             {
@@ -158,6 +158,45 @@ void Option1()
 }
 
 //Option 2: 
+void Option2()
+{
+    using (StreamReader sr = new StreamReader("orders.csv"))
+    {
+        string? s = sr.ReadLine();
+        if (s != null)
+        {
+            string[] heading = s.Split(',');
+            Console.WriteLine("{0,-5}  {1,-10}  {2,-20}  {3,-20} {4,-10} " +
+                "{5,-10} {6,-10} {7,-15} {8,-30} {9,-10}",
+                heading[0], heading[1], heading[2], heading[3], heading[4],
+                heading[5], heading[6], heading[7], "Flavour", "Toppings");
+        }
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] info = s.Split(',');
+
+            if (info != null)
+            {
+                Console.WriteLine("{0,-5}  {1,-10}  {2,-20}  {3,-20} {4,-10} {5,-10} {6,-10} {7,-15} {8,-30} {9,-15}",
+                    info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7],
+                    FormatFlavour(info[8], info[9], info[10]), FormatToppings(info[11], info[12], info[13]));
+
+                string FormatFlavour(string part1, string part2, string part3)
+                {
+                    return $"{part1}{(string.IsNullOrWhiteSpace(part2) ? "" : $",{part2}")}{(string.IsNullOrWhiteSpace(part3) ? "" : $",{part3}")}";
+                }
+
+                string FormatToppings(string part1, string part2, string part3)
+                {
+                    return $"{part1}{(string.IsNullOrWhiteSpace(part2) ? "" : $",{part2}")}{(string.IsNullOrWhiteSpace(part3) ? "" : $",{part3}")}";
+                }
+
+
+            }
+        }
+    }
+}
+
 
 
 //Option 3: 
@@ -187,7 +226,7 @@ void Option3()
     Customer customer = new Customer(name, id, dob);
 
     //create pointcard object
-    PointCard pointCard = new PointCard(0,0);
+    PointCard pointCard = new PointCard(0, 0);
 
     //assign the PointCard to Customer
     customer.rewards = pointCard;
@@ -228,7 +267,7 @@ void Option4()
 
             DateTime c_dob;
             DateTime.TryParse(dobString, out c_dob);
-            
+
 
             int id = Convert.ToInt32(c_id);
             Customer customer = new Customer(c_name, id, c_dob);

@@ -3,6 +3,7 @@
 //sophie: option 2,5,6
 
 using assg;
+using System.Xml.Linq;
 
 void DisplayMenu()
 {
@@ -251,23 +252,19 @@ void Option3()
 //Option 4: 
 void Option4()
 {
-    //list customers from customer.csv
+    // List customers from customer.csv
     List<Customer> customerList = new List<Customer>();
     using (StreamReader sr = new StreamReader("customers.csv"))
     {
-        string? s = sr.ReadLine(); // read the heading
-                                   // display the heading
+        sr.ReadLine(); // Read the heading (skip)
+        string s;
         while ((s = sr.ReadLine()) != null)
         {
             string[] info = s.Split(',');
             string c_name = info[0];
             string c_id = info[1];
-
             string dobString = info[2];
-
-            DateTime c_dob;
-            DateTime.TryParse(dobString, out c_dob);
-
+            DateTime.TryParse(dobString, out DateTime c_dob);
 
             int id = Convert.ToInt32(c_id);
             Customer customer = new Customer(c_name, id, c_dob);
@@ -275,45 +272,61 @@ void Option4()
         }
     }
 
-    //prompt user to select customer and retrieve selected customer
-    Console.Write("Select a customer (enter Customer ID) : ");
+    // Prompt user to select a customer and retrieve the selected customer
+    Console.Write("Select a customer (enter Customer ID): ");
     int cus_id = Convert.ToInt32(Console.ReadLine());
 
-    foreach (var x in customerList)
+    Customer selectedCustomer = new Customer();
+
+    foreach (var customer in customerList)
     {
-        if (x.memberId == cus_id)
+        if (customer.memberId == cus_id)
         {
-            List<IceCream> orderList = new List<IceCream>();
-            Customer customer = new Customer(x.name, x.memberId, x.dob);
+            selectedCustomer = customer;
+            break;
+        }
+    }
 
-            //creating new order for customer
-            Order existingOrder = new Order(x.memberId, DateTime.Now);
+    if (selectedCustomer != null)
+    {
+        // create a new order for selected customer
+        Order existingOrder = selectedCustomer.MakeOrder();
+        List<IceCream> orderList = new List<IceCream>();
+        List<Order> orderHistory = new List<Order>();
 
-            //
-            List<Order> orderHistory = new List<Order>();
+        // prompt user if they want to add another ice cream to the order
+        while (true)
+        {
+            Console.WriteLine("Do you want to add an ice cream order? ('Y' / 'N')");
+            string yesno = Console.ReadLine();
 
-
-            //prompting user if they would like to add another ice cream to the order
-            while (true)
+            if (yesno.ToUpper() == "N")
             {
-                Console.WriteLine("Do you want to add an ice cream order? ( 'Y' / 'N' )");
-                string yesno = Console.ReadLine();
-
-                if (yesno == "N")
-                {
-                    break;
-                }
-                else
-                {
-                    // create new ice cream object
-                    IceCream iceCream = iceCreamOrder();
-                    orderList.Add(iceCream);
-                    orderHistory.Add(existingOrder);
-                    if
-                }
+                break;
+            }
+            else
+            {
+                // create a new ice cream object
+                IceCream iceCream = iceCreamOrder();
+                orderList.Add(iceCream);
+                // add the ice cream to the existingOrder's iceCreamList
+                existingOrder.AddIceCream(iceCream);
             }
         }
 
+        // link the new order to the customer's current order
+        selectedCustomer.currentOrder = existingOrder;
+
+        // if the customer has a gold-tier Pointcard,
+        // append their order to the back of the gold members order queue.
+        // Otherwise append the order to the back of the regular order queue
+
+        // display a message to indicate order has been made successfully
+        Console.WriteLine("Order has been made successfully!");
+    }
+    else
+    {
+        Console.WriteLine("Invalid customer ID. Exiting...");
     }
 }
 

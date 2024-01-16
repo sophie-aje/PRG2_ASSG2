@@ -73,6 +73,7 @@ DisplayMenu();
 //method to make an icecream order
 IceCream iceCreamOrder()
 {
+    //prompt user to enter ice cream order
     Console.Write("Enter number of scoops: ");
     int scoops = Convert.ToInt32(Console.ReadLine());
 
@@ -107,6 +108,7 @@ IceCream iceCreamOrder()
         toppings.Add(new Topping(toppingName));
     }
 
+    //creating ice cream object
     if (option == "1")
     {
         return new Cup(option, scoops, flavours, toppings);
@@ -243,13 +245,22 @@ void Option4()
         if (x.memberId == cus_id)
         {
             List<IceCream> orderList = new List<IceCream>();
+            Customer customer = new Customer(x.name, x.memberId, x.dob);
 
+            //creating new order for customer
+            Order existingOrder = new Order(x.memberId, DateTime.Now);
+
+            //
+            List<Order> orderHistory = new List<Order>();
+
+
+            //prompting user if they would like to add another ice cream to the order
             while (true)
             {
-                Console.WriteLine("Do you want to add an ice cream order? (yes/no)");
+                Console.WriteLine("Do you want to add an ice cream order? ( 'Y' / 'N' )");
                 string yesno = Console.ReadLine();
 
-                if (yesno == "no")
+                if (yesno == "N")
                 {
                     break;
                 }
@@ -258,6 +269,8 @@ void Option4()
                     // create new ice cream object
                     IceCream iceCream = iceCreamOrder();
                     orderList.Add(iceCream);
+                    orderHistory.Add(existingOrder);
+                    if
                 }
             }
         }

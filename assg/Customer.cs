@@ -41,6 +41,9 @@ namespace assg
                 return false;
             }
         }
+
+        public PointCard CustomerPointCard => rewards;
+
         public override string ToString()
         {
             return $"{name}\t{memberId}\t{dob}";

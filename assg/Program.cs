@@ -5,6 +5,14 @@
 using assg;
 using System.Xml.Linq;
 
+
+List<IceCream> orderList = new List<IceCream>();
+List<Order> orderHistory = new List<Order>();
+
+// lists to append orders
+List<Order> regularOrderQueue = new List<Order>;
+List<Order> goldOrderQueue = new List<Order>;
+
 void DisplayMenu()
 {
     while (true)
@@ -134,6 +142,8 @@ IceCream iceCreamOrder()
 
 }
 
+
+
 //Option 1: 
 void Option1()
 {
@@ -157,6 +167,8 @@ void Option1()
         }
     }
 }
+
+
 
 //Option 2: 
 void Option2()
@@ -249,6 +261,8 @@ void Option3()
 
 }
 
+
+
 //Option 4: 
 void Option4()
 {
@@ -291,8 +305,7 @@ void Option4()
     {
         // create a new order for selected customer
         Order existingOrder = selectedCustomer.MakeOrder();
-        List<IceCream> orderList = new List<IceCream>();
-        List<Order> orderHistory = new List<Order>();
+        
 
         // prompt user if they want to add another ice cream to the order
         while (true)
@@ -317,11 +330,19 @@ void Option4()
         // link the new order to the customer's current order
         selectedCustomer.currentOrder = existingOrder;
 
-        // if the customer has a gold-tier Pointcard,
+        // If the customer has a gold-tier Pointcard,
         // append their order to the back of the gold members order queue.
-        // Otherwise append the order to the back of the regular order queue
+        // Otherwise, append the order to the back of the regular order queue
+        if (selectedCustomer.rewards.tier == "Gold")
+        {
+            goldOrderQueue.Add(existingOrder);
+        }
+        else
+        {
+            regularOrderQueue.Add(existingOrder);
+        }
 
-        // display a message to indicate order has been made successfully
+        // display message 
         Console.WriteLine("Order has been made successfully!");
     }
     else

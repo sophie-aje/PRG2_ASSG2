@@ -5,13 +5,48 @@
 using assg;
 using System.Xml.Linq;
 
+// list for customer info
+List<Customer> customerList = new List<Customer>();
 
 List<IceCream> orderList = new List<IceCream>();
 List<Order> orderHistory = new List<Order>();
 
 // lists to append orders
-List<Order> regularOrderQueue = new List<Order>;
-List<Order> goldOrderQueue = new List<Order>;
+List<Order> regularOrderQueue = new List<Order>();
+List<Order> goldOrderQueue = new List<Order>();
+
+
+// list to hold pointcard information
+List<PointCard> pointCards = new List<PointCard>();
+
+void ReadCustomerCSV()
+{
+    using (StreamReader sr = new StreamReader("customers.csv"))
+    {
+        sr.ReadLine(); // Read the heading (skip)
+        string s;
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] info = s.Split(',');
+            string c_name = info[0];
+            string c_id = info[1];
+            string dobString = info[2];
+            DateTime.TryParse(dobString, out DateTime c_dob);
+
+            int id = Convert.ToInt32(c_id);
+            Customer customer = new Customer(c_name, id, c_dob);
+            customerList.Add(customer);
+
+            string tier = info[3];
+            int points = Convert.ToInt32(info[4]);
+            int punch = Convert.ToInt32(info[5]);
+            PointCard pointCard = new PointCard(points, punch);
+            pointCard.tier = tier;
+            pointCards.Add(pointCard);
+        }
+    }
+
+}
 
 void DisplayMenu()
 {
@@ -120,19 +155,26 @@ IceCream iceCreamOrder()
     //creating ice cream object
     if (option == "1")
     {
-        return new Cup(option, scoops, flavours, toppings);
+        
+        Cup new_cup = new Cup(option, scoops, flavours, toppings);
+        orderList.Add(new_cup);
+        return new_cup;
     }
     else if (option == "2")
     {
         Console.Write("Do you want the cone dipped? (true/false): ");
         bool isDipped = bool.Parse(Console.ReadLine());
-        return new Cone(option, scoops, flavours, toppings, isDipped);
+        Cone new_cone = new Cone(option, scoops, flavours, toppings, isDipped);
+        orderList.Add(new_cone);
+        return new_cone;
     }
     else if (option == "3")
     {
         Console.Write("What waffle flavour do you want? (Original/Red Velvet/Charcoal/Pandan): ");
         string wf = Console.ReadLine();
-        return new Waffle(option, scoops, flavours, toppings, wf);
+        Waffle new_waffle = new Waffle(option, scoops, flavours, toppings, wf);
+        orderList.Add(new_waffle);
+        return new_waffle;
     }
     else
     {
@@ -240,7 +282,7 @@ void Option3()
 
     //create pointcard object
     PointCard pointCard = new PointCard(0, 0);
-
+    pointCard.tier = "Ordinary";
     //assign the PointCard to Customer
     customer.rewards = pointCard;
 
@@ -266,107 +308,68 @@ void Option3()
 //Option 4: 
 void Option4()
 {
-    // List customers from customer.csv
-    List<Customer> customerList = new List<Customer>();
-    using (StreamReader sr = new StreamReader("customers.csv"))
-    {
-        sr.ReadLine(); // Read the heading (skip)
-        string s;
-        while ((s = sr.ReadLine()) != null)
-        {
-            string[] info = s.Split(',');
-            string c_name = info[0];
-            string c_id = info[1];
-            string dobString = info[2];
-            DateTime.TryParse(dobString, out DateTime c_dob);
-
-            int id = Convert.ToInt32(c_id);
-            Customer customer = new Customer(c_name, id, c_dob);
-            customerList.Add(customer);
-        }
-    }
+    ReadCustomerCSV();
 
     // prompt user to select a customer and retrieve the selected customer
     Console.Write("Select a customer (enter Customer ID): ");
-    
-    string userInput = Console.ReadLine();
 
-    // data validation to ensure input is in integers
-    if (int.TryParse(userInput, out int cus_id))
+    if (int.TryParse(Console.ReadLine(), out int cus_id))
     {
-        // valid integer
-        Console.WriteLine("Valid integer inputted.");
-    }
-    else
-    {
-        // invalid integer
-        Console.WriteLine("Invalid input. Please enter an integer.");
-    }
+        // find customer
+        Customer selectedCustomer = customerList.FirstOrDefault(customer => customer.memberId == cus_id);
 
-    Customer selectedCustomer = new Customer();
-
-    foreach (var customer in customerList)
-    {
-        if (customer.memberId == cus_id)
+        if (selectedCustomer != null)
         {
-            selectedCustomer = customer;
-            break;
-        }
-    }
+            // create a new order for selected customer
+            Order existingOrder = selectedCustomer.MakeOrder();
 
-    if (selectedCustomer != null)
-    {
-        // create a new order for selected customer
-        Order existingOrder = selectedCustomer.MakeOrder();
-        
-
-        // prompt user if they want to add another ice cream to the order
-        while (true)
-        {
-            Console.WriteLine("Do you want to add an ice cream order? ('Y' / 'N')");
-            string yesno = Console.ReadLine();
-
-            if (yesno.ToUpper() == "N")
+            // Prompt user if they want to add another ice cream to the order
+            while (true)
             {
-                break;
+                Console.WriteLine("Do you want to add an ice cream order? ('y' / 'n')");
+                string yesno = Console.ReadLine();
+
+                if (yesno.ToUpper() == "n")
+                {
+                    break;
+                }
+                else
+                {
+                    // Create a new ice cream object
+                    IceCream iceCream = iceCreamOrder();
+                    existingOrder.AddIceCream(iceCream);
+                }
+            }
+
+            // Link the new order to the customer's current order
+            selectedCustomer.currentOrder = existingOrder;
+
+            // Check if the customer has a PointCard and it has a tier
+            if (selectedCustomer.rewards != null && selectedCustomer.rewards.tier == "Gold")
+            {
+                goldOrderQueue.Add(existingOrder);
             }
             else
             {
-                // create a new ice cream object
-                IceCream iceCream = iceCreamOrder();
-                orderList.Add(iceCream);
-                // add the ice cream to the existingOrder's iceCreamList
-                existingOrder.AddIceCream(iceCream);
+                regularOrderQueue.Add(existingOrder);
             }
-        }
 
-        // link the new order to the customer's current order
-        selectedCustomer.currentOrder = existingOrder;
-
-        // If the customer has a gold-tier Pointcard,
-        // append their order to the back of the gold members order queue.
-        // Otherwise, append the order to the back of the regular order queue
-        if (selectedCustomer.rewards.tier == "Gold")
-        {
-            goldOrderQueue.Add(existingOrder);
+            // Display message
+            Console.WriteLine("Order has been made successfully!");
         }
         else
         {
-            regularOrderQueue.Add(existingOrder);
+            Console.WriteLine("Invalid customer ID. Please try again.");
         }
-
-        // display message 
-        Console.WriteLine("Order has been made successfully!");
     }
-
     else
     {
-        Console.WriteLine("Invalid customer ID. Please enter option again...");
+        Console.WriteLine("Invalid input. Please enter a valid integer.");
     }
 }
+
 
 //Option 5: 
 
 
 //Option 6: 
-

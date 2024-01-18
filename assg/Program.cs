@@ -286,9 +286,22 @@ void Option4()
         }
     }
 
-    // Prompt user to select a customer and retrieve the selected customer
+    // prompt user to select a customer and retrieve the selected customer
     Console.Write("Select a customer (enter Customer ID): ");
-    int cus_id = Convert.ToInt32(Console.ReadLine());
+    
+    string userInput = Console.ReadLine();
+
+    // data validation to ensure input is in integers
+    if (int.TryParse(userInput, out int cus_id))
+    {
+        // valid integer
+        Console.WriteLine("Valid integer inputted.");
+    }
+    else
+    {
+        // invalid integer
+        Console.WriteLine("Invalid input. Please enter an integer.");
+    }
 
     Customer selectedCustomer = new Customer();
 
@@ -345,9 +358,10 @@ void Option4()
         // display message 
         Console.WriteLine("Order has been made successfully!");
     }
+
     else
     {
-        Console.WriteLine("Invalid customer ID. Exiting...");
+        Console.WriteLine("Invalid customer ID. Please enter option again...");
     }
 }
 
@@ -355,3 +369,4 @@ void Option4()
 
 
 //Option 6: 
+

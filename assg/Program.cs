@@ -27,6 +27,8 @@ List<PointCard> pointCards = new List<PointCard>();
 
 Dictionary<int, List<Order>> ordersHistoryDictionary = new Dictionary<int, List<Order>>();
 
+
+
 void ReadOrdersCSV()
 {
     using (StreamReader sr = new StreamReader("orders.csv"))
@@ -254,82 +256,114 @@ void Option1()
 //Option 2: 
 void Option2()
 {
-    // Display orders in the queues
-    if (goldOrderQueue.Count != null)
+    Console.WriteLine("GOLD MEMBER QUEUE");
+    Console.WriteLine("Order information:");
+    Console.WriteLine("{0,-7}{1,-20}{2,-20}", "ID", "Time Received", "Time Fulfilled");
+
+    foreach (Order order in goldOrderQueue)
     {
-        Console.WriteLine("Gold Order Queue:");
-        foreach (var x in goldOrderQueue)
+        Console.WriteLine(order.ToString()); // Print order details
+
+        foreach (IceCream iceCream in order.iceCreamList)
         {
-            Console.WriteLine(x.ToString());
+            Console.WriteLine("Ice Cream information:");
+            Console.WriteLine($"Option: {iceCream.option}");
+            Console.WriteLine($"Scoops: {iceCream.scoops}");
+            Console.WriteLine($"Flavour(s): ");
+
+            foreach (Flavour flavour in flavours)
+            {
+                Console.WriteLine(flavour.ToString());
+            }
+
+
+            foreach (Topping topping in iceCream.toppings)
+            {
+                Console.WriteLine($"Toppings: {topping.type}");
+            }
         }
     }
 
-    if (regularOrderQueue.Count != null)
-    {
-        Console.WriteLine("Regular Order Queue:");
-        foreach (var y in regularOrderQueue)
-        {
-            Console.WriteLine(y.ToString());
-            
-        }
+    Console.WriteLine("\nREGULAR MEMBER QUEUE");
+    Console.WriteLine("Order Information:");
+    Console.WriteLine("{0,-7}{1,-20}{2,-20}", "ID", "Time Received", "Time Fulfilled");
 
-        for (int i = 0; i < iceCreamOrder.Count; i++)
+    foreach (Order order in regularOrderQueue)
+    {
+        Console.WriteLine(order.ToString()); // Print order details
+
+        foreach (IceCream iceCream in order.iceCreamList)
         {
-            if 
+            Console.WriteLine("Ice Cream:");
+            Console.WriteLine($"Option: {iceCream.option}");
+            Console.WriteLine($"Scoops: {iceCream.scoops}");
+
+            foreach (Flavour flavour in iceCream.flavours)
+            {
+                Console.WriteLine($"Flavours: {flavour.type}");
+
+            }
+
+
+            foreach (Topping topping in iceCream.toppings)
+            {
+                Console.WriteLine($"Toppings: {topping.type}");
+            }
         }
     }
+}
 
 
 
 
-    //Option 3: 
-    void Option3()
+//Option 3: 
+void Option3()
+{
+    //prompt user for details
+    Console.Write("Enter customer name: ");
+    string name = Console.ReadLine();
+
+    Console.Write("Enter customer ID number: ");
+    int id = Convert.ToInt32(Console.ReadLine());
+
+    Console.Write("Enter customer data of birth: ");
+    string dobString = Console.ReadLine();
+    DateTime dob;
+
+    if (DateTime.TryParse(dobString, out dob))
     {
-        //prompt user for details
-        Console.Write("Enter customer name: ");
-        string name = Console.ReadLine();
-
-        Console.Write("Enter customer ID number: ");
-        int id = Convert.ToInt32(Console.ReadLine());
-
-        Console.Write("Enter customer data of birth: ");
-        string dobString = Console.ReadLine();
-        DateTime dob;
-
-        if (DateTime.TryParse(dobString, out dob))
-        {
-            Console.WriteLine($"Date of Birth: {dob}");
-        }
-        else
-        {
-            Console.WriteLine("Invalid date format.");
-        }
-
-        //create customer object
-        Customer customer = new Customer(name, id, dob);
-
-        //create pointcard object
-        PointCard pointCard = new PointCard(0, 0);
-        pointCard.tier = "Ordinary";
-        //assign the PointCard to Customer
-        customer.rewards = pointCard;
-
-
-        //append customer info into customers csv file
-        string memstatus = "Silver";
-        string sid = Convert.ToString(id);
-
-        List<string> newList = new List<string> { name, sid, dobString, memstatus, "0", "0" };
-
-        using (StreamWriter sw = new StreamWriter("customers.csv", true))
-        {
-            string csvLine = string.Join(",", newList);
-            sw.WriteLine(csvLine);
-
-            Console.WriteLine("Registration status: SUCCESSFUL");
-        }
-
+        Console.WriteLine($"Date of Birth: {dob}");
     }
+    else
+    {
+        Console.WriteLine("Invalid date format.");
+    }
+
+    //create customer object
+    Customer customer = new Customer(name, id, dob);
+
+    //create pointcard object
+    PointCard pointCard = new PointCard(0, 0);
+    pointCard.tier = "Ordinary";
+    //assign the PointCard to Customer
+    customer.rewards = pointCard;
+
+
+    //append customer info into customers csv file
+    string memstatus = "Silver";
+    string sid = Convert.ToString(id);
+
+    List<string> newList = new List<string> { name, sid, dobString, memstatus, "0", "0" };
+
+    using (StreamWriter sw = new StreamWriter("customers.csv", true))
+    {
+        string csvLine = string.Join(",", newList);
+        sw.WriteLine(csvLine);
+
+        Console.WriteLine("Registration status: SUCCESSFUL");
+    }
+
+}
 
 
 
@@ -388,7 +422,6 @@ void Option4()
                 regularOrderQueue.Add(newOrder);
             }
 
-
             // Display message
             Console.WriteLine("Order has been made successfully!");
         }
@@ -402,7 +435,7 @@ void Option4()
         Console.WriteLine("Invalid input. Please enter a valid integer.");
     }
 
-    
+
 }
 
 
@@ -531,6 +564,7 @@ void Option5()
 
                         Console.WriteLine("{0,-5} {1,-10} {2,-18} {3,-18} {4,-10} {5,-6} {6,-6} {7,-15} {8,-10} {9,-10} {10,-10} {11,-10} {12,-10} {13,-10} {14,-10}",
                             order.Id, order.timeReceived, order.timeFulfilled, iceCream.option, iceCream.scoops, "", waffle.waffleFlavour, f[0], f[1], f[2], t[0], t[1], t[2], t[3]);
+                        
                     }
                 }
             }
@@ -548,12 +582,9 @@ void Option5()
 
 
 
-//Option 6: 
 
 
-
-
-
+    //Option 6: 
 void DisplayMenu()
 {
     int option;
@@ -605,9 +636,6 @@ void DisplayMenu()
         }
     } while (true);
 }
-
-
-
 
 
 DisplayMenu();

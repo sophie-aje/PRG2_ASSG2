@@ -2,6 +2,8 @@
 //nehaa: option 1,3,4
 //sophie: option 2,5,6
 
+// orders.csv meant for order histories (inlcudes time received and time fulfilled)
+
 using assg;
 using System;
 using System.Xml.Linq;
@@ -12,9 +14,12 @@ List<Customer> customerList = new List<Customer>();
 List<IceCream> orderList = new List<IceCream>();
 
 // lists to append orders
-List<Order> regularOrderQueue = new List<Order>();
-List<Order> goldOrderQueue = new List<Order>();
+List<Queue> regularOrderQueue = new List<Queue>();
+List<Queue> goldOrderQueue = new List<Queue>();
 
+// list to store new order info
+Order order = new Order();
+List<IceCream> iceCreamOrder = order.iceCreamList; 
 
 // list to hold pointcard information
 List<PointCard> pointCards = new List<PointCard>();
@@ -116,7 +121,7 @@ void ReadCustomerCSV()
     {
         using (StreamReader sr = new StreamReader("customers.csv"))
         {
-            sr.ReadLine(); // Read the heading (skip)
+            sr.ReadLine(); 
             string s;
             while ((s = sr.ReadLine()) != null)
             {
@@ -140,12 +145,12 @@ void ReadCustomerCSV()
         }
 
     }
-
+ReadCustomerCSV();
 
 
     //---BASIC FEATURES---
 
-    //method to make an icecream order
+//method to make an icecream order
     IceCream iceCreamOrder()
     {
         //prompt user to enter ice cream order
@@ -188,7 +193,7 @@ void ReadCustomerCSV()
         {
 
             Cup new_cup = new Cup(option, scoops, flavours, toppings);
-            orderList.Add(new_cup);
+            iceCreamOrder.Add(new_cup);
             return new_cup;
         }
         else if (option == "2")
@@ -196,7 +201,7 @@ void ReadCustomerCSV()
             Console.Write("Do you want the cone dipped? (true/false): ");
             bool isDipped = bool.Parse(Console.ReadLine());
             Cone new_cone = new Cone(option, scoops, flavours, toppings, isDipped);
-            orderList.Add(new_cone);
+            iceCreamOrder.Add(new_cone);
             return new_cone;
         }
         else if (option == "3")
@@ -204,7 +209,7 @@ void ReadCustomerCSV()
             Console.Write("What waffle flavour do you want? (Original/Red Velvet/Charcoal/Pandan): ");
             string wf = Console.ReadLine();
             Waffle new_waffle = new Waffle(option, scoops, flavours, toppings, wf);
-            orderList.Add(new_waffle);
+            iceCreamOrder.Add(new_waffle);
             return new_waffle;
         }
         else
@@ -338,66 +343,75 @@ void ReadCustomerCSV()
 
     //Option 4: 
     void Option4()
+{
+    // prompt user to select a customer and retrieve the selected customer
+    Console.Write("Select a customer (enter Customer ID): ");
+
+    if (int.TryParse(Console.ReadLine(), out int cus_id))
     {
-        ReadCustomerCSV();
+        // find customer
+        Customer selectedCustomer = customerList.FirstOrDefault(customer => customer.memberId == cus_id);
 
-        // prompt user to select a customer and retrieve the selected customer
-        Console.Write("Select a customer (enter Customer ID): ");
-
-        if (int.TryParse(Console.ReadLine(), out int cus_id))
+        if (selectedCustomer != null)
         {
-            // find customer
-            Customer selectedCustomer = customerList.FirstOrDefault(customer => customer.memberId == cus_id);
+            // create a new order for selected customer
+            Order existingOrder = selectedCustomer.MakeOrder();
+            existingOrder.Id = cus_id;
 
-            if (selectedCustomer != null)
+            // Prompt user if they want to add another ice cream to the order
+            while (true)
             {
-                // create a new order for selected customer
-                Order existingOrder = selectedCustomer.MakeOrder();
+                Console.WriteLine("Do you want to add an ice cream order? ('y' / 'n')");
+                string yesno = Console.ReadLine();
 
-                // Prompt user if they want to add another ice cream to the order
-                while (true)
+                if (yesno.ToLower() == "n")
                 {
-                    Console.WriteLine("Do you want to add an ice cream order? ('y' / 'n')");
-                    string yesno = Console.ReadLine();
-
-                    if (yesno.ToLower() == "n")
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        // Create a new ice cream object
-                        IceCream iceCream = iceCreamOrder();
-                        existingOrder.AddIceCream(iceCream);
-                    }
-                }
-
-                // Link the new order to the customer's current order
-                selectedCustomer.currentOrder = existingOrder;
-
-                // Check if the customer has a PointCard and it has a tier
-                if (selectedCustomer.rewards != null && selectedCustomer.rewards.tier == "Gold")
-                {
-                    goldOrderQueue.Add(existingOrder);
+                    break;
                 }
                 else
                 {
-                    regularOrderQueue.Add(existingOrder);
+                    // Create a new ice cream object
+                    IceCream iceCream = iceCreamOrder();
+                    existingOrder.AddIceCream(iceCream);
                 }
+            }
 
-                // Display message
-                Console.WriteLine("Order has been made successfully!");
+            // Link the new order to the customer's current order
+            selectedCustomer.currentOrder = existingOrder;
+
+
+            // Check if the customer has a PointCard and it has a tier
+            if (selectedCustomer.rewards != null && selectedCustomer.rewards.tier == "Gold")
+            {
+                goldOrderQueue.Add(existingOrder);
             }
             else
             {
-                Console.WriteLine("Invalid customer ID. Please try again.");
+                regularOrderQueue.Add(existingOrder);
             }
+
+            // Display message
+            Console.WriteLine("Order has been made successfully!");
         }
         else
         {
-            Console.WriteLine("Invalid input. Please enter a valid integer.");
+            Console.WriteLine("Invalid customer ID. Please try again.");
         }
     }
+    else
+    {
+        Console.WriteLine("Invalid input. Please enter a valid integer.");
+    }
+
+    foreach (var x in goldOrderQueue)
+    {
+        Console.WriteLine(x.ToString());
+    }
+    foreach (var y in regularOrderQueue)
+    {
+        Console.WriteLine(y.ToString());
+    }
+}
 
 
 //Option 5: 

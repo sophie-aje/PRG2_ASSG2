@@ -14,8 +14,8 @@ List<Customer> customerList = new List<Customer>();
 List<IceCream> orderList = new List<IceCream>();
 
 // lists to append orders
-List<Queue> regularOrderQueue = new List<Queue>();
-List<Queue> goldOrderQueue = new List<Queue>();
+List<Order> regularOrderQueue = new List<Order>();
+List<Order> goldOrderQueue = new List<Order>();
 
 // list to store new order info
 Order order = new Order();
@@ -148,82 +148,84 @@ void ReadCustomerCSV()
 ReadCustomerCSV();
 
 
-    //---BASIC FEATURES---
+//---BASIC FEATURES---
 
 //method to make an icecream order
-    IceCream iceCreamOrder()
+IceCream MakeiceCreamOrder()
+{
+    // List to store ice creams
+    List<IceCream> iceCreamList = new List<IceCream>();
+
+    // prompt user to enter ice cream order
+    Console.Write("Enter number of scoops: ");
+    int scoops = Convert.ToInt32(Console.ReadLine());
+
+    Console.Write("Enter the ice cream option: (\"1\": Cup / \"2\": Cone / \"3\": Waffle ) ");
+    string option = Console.ReadLine();
+
+    Console.Write("Enter the number of toppings: ");
+    int numberOfToppings = Convert.ToInt32(Console.ReadLine());
+
+    List<Flavour> flavours = new List<Flavour>();
+
+    for (int i = 0; i < scoops; i++)
     {
-        //prompt user to enter ice cream order
-        Console.Write("Enter number of scoops: ");
-        int scoops = Convert.ToInt32(Console.ReadLine());
+        Console.Write($"Enter flavour for scoop {i + 1}: ");
+        string flavourName = Console.ReadLine();
+        Flavour flavour = new Flavour();
 
-        Console.Write("Enter the ice cream option: (\"1\": Cup / \"2\": Cone / \"3\": Waffle ) ");
-        string option = Console.ReadLine();
-
-        Console.Write("Enter the number of toppings: ");
-        int numberOfToppings = Convert.ToInt32(Console.ReadLine());
-
-        List<Flavour> flavours = new List<Flavour>();
-
-        for (int i = 0; i < scoops; i++)
+        if (flavourName == "durian" || flavourName == "ube" || flavourName == "sea salt")
         {
-            Console.Write($"Enter flavour for scoop {i + 1}: ");
-            string flavourName = Console.ReadLine();
-            Flavour flavour = new Flavour();
-
-            if (flavourName == "durian" || flavourName == "ube" || flavourName == "sea salt")
-            {
-                flavour.type = flavourName;
-                flavour.premium = true;
-            }
-
-            flavours.Add(flavour);
+            flavour.type = flavourName;
+            flavour.premium = true;
         }
 
-        List<Topping> toppings = new List<Topping>();
-        for (int i = 0; i < numberOfToppings; i++)
-        {
-            Console.Write($"Enter topping {i + 1}: (sprinkles/mochi/sago/oreos) ");
-            string toppingName = Console.ReadLine();
-            toppings.Add(new Topping(toppingName));
-        }
-
-        //creating ice cream object
-        if (option == "1")
-        {
-
-            Cup new_cup = new Cup(option, scoops, flavours, toppings);
-            iceCreamOrder.Add(new_cup);
-            return new_cup;
-        }
-        else if (option == "2")
-        {
-            Console.Write("Do you want the cone dipped? (true/false): ");
-            bool isDipped = bool.Parse(Console.ReadLine());
-            Cone new_cone = new Cone(option, scoops, flavours, toppings, isDipped);
-            iceCreamOrder.Add(new_cone);
-            return new_cone;
-        }
-        else if (option == "3")
-        {
-            Console.Write("What waffle flavour do you want? (Original/Red Velvet/Charcoal/Pandan): ");
-            string wf = Console.ReadLine();
-            Waffle new_waffle = new Waffle(option, scoops, flavours, toppings, wf);
-            iceCreamOrder.Add(new_waffle);
-            return new_waffle;
-        }
-        else
-        {
-            Console.WriteLine("Error. Please key in options from 1 to 3.");
-            return null;
-        }
-
+        flavours.Add(flavour);
     }
 
+    List<Topping> toppings = new List<Topping>();
+    for (int i = 0; i < numberOfToppings; i++)
+    {
+        Console.Write($"Enter topping {i + 1}: (sprinkles/mochi/sago/oreos) ");
+        string toppingName = Console.ReadLine();
+        toppings.Add(new Topping(toppingName));
+    }
+
+    // Creating ice cream object
+    if (option == "1")
+    {
+        Cup new_cup = new Cup(option, scoops, flavours, toppings);
+        iceCreamList.Add(new_cup);
+        return new_cup;
+    }
+    else if (option == "2")
+    {
+        Console.Write("Do you want the cone dipped? (true/false): ");
+        bool isDipped = bool.Parse(Console.ReadLine());
+        Cone new_cone = new Cone(option, scoops, flavours, toppings, isDipped);
+        iceCreamList.Add(new_cone);
+        return new_cone;
+    }
+    else if (option == "3")
+    {
+        Console.Write("What waffle flavour do you want? (Original/Red Velvet/Charcoal/Pandan): ");
+        string wf = Console.ReadLine();
+        Waffle new_waffle = new Waffle(option, scoops, flavours, toppings, wf);
+        iceCreamList.Add(new_waffle);
+        return new_waffle;
+    }
+    else
+    {
+        Console.WriteLine("Error. Please key in options from 1 to 3.");
+        return null;
+    }
+}
 
 
-    //Option 1: 
-    void Option1()
+
+
+//Option 1: 
+void Option1()
     {
         //reading from customers.csv file
         using (StreamReader sr = new StreamReader("customers.csv"))
@@ -248,45 +250,28 @@ ReadCustomerCSV();
 
 
 
-    //Option 2: 
-    void Option2()
+//Option 2: 
+void Option2()
+{
+    // Display orders in the queues
+    if (goldOrderQueue.Count != null)
     {
-        using (StreamReader sr = new StreamReader("orders.csv"))
+        Console.WriteLine("Gold Order Queue:");
+        foreach (var x in goldOrderQueue)
         {
-            string? s = sr.ReadLine();
-            if (s != null)
-            {
-                string[] heading = s.Split(',');
-                Console.WriteLine("{0,-5}  {1,-10}  {2,-20}  {3,-20} {4,-10} " +
-                    "{5,-10} {6,-10} {7,-15} {8,-30} {9,-10}",
-                    heading[0], heading[1], heading[2], heading[3], heading[4],
-                    heading[5], heading[6], heading[7], "Flavour", "Toppings");
-            }
-            while ((s = sr.ReadLine()) != null)
-            {
-                string[] info = s.Split(',');
-
-                if (info != null)
-                {
-                    Console.WriteLine("{0,-5}  {1,-10}  {2,-20}  {3,-20} {4,-10} {5,-10} {6,-10} {7,-15} {8,-30} {9,-15}",
-                        info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7],
-                        FormatFlavour(info[8], info[9], info[10]), FormatToppings(info[11], info[12], info[13]));
-
-                    string FormatFlavour(string part1, string part2, string part3)
-                    {
-                        return $"{part1}{(string.IsNullOrWhiteSpace(part2) ? "" : $",{part2}")}{(string.IsNullOrWhiteSpace(part3) ? "" : $",{part3}")}";
-                    }
-
-                    string FormatToppings(string part1, string part2, string part3)
-                    {
-                        return $"{part1}{(string.IsNullOrWhiteSpace(part2) ? "" : $",{part2}")}{(string.IsNullOrWhiteSpace(part3) ? "" : $",{part3}")}";
-                    }
-
-
-                }
-            }
+            Console.WriteLine(x.ToString());
         }
     }
+
+    if (regularOrderQueue.Count != null)
+    {
+        Console.WriteLine("Regular Order Queue:");
+        foreach (var y in regularOrderQueue)
+        {
+            Console.WriteLine(y.ToString());
+        }
+    }
+
 
 
 
@@ -341,14 +326,16 @@ ReadCustomerCSV();
 
 
 
-    //Option 4: 
+//Option 4: 
 void Option4()
 {
-    Console.WriteLine("{15,-10} {15, -10}", "Name", "Member Id");
+    Console.WriteLine("{0,-10} {1, -10}", "Name", "Member Id");
+
     foreach (var xyz in customerList)
     {
-        Console.WriteLine("{15,-10} {15, -10}", xyz.name, xyz.memberId);
+        Console.WriteLine("{0,-10} {1, -10}", xyz.name, xyz.memberId);
     }
+
     // prompt user to select a customer and retrieve the selected customer
     Console.Write("Select a customer (enter Customer ID): ");
 
@@ -359,41 +346,41 @@ void Option4()
 
         if (selectedCustomer != null)
         {
-            // create a new order for selected customer
-            Order existingOrder = selectedCustomer.MakeOrder();
-            existingOrder.Id = cus_id;
+            // create a new order for the selected customer
+            Order newOrder = new Order(cus_id, DateTime.Now);
 
-            // Prompt user if they want to add another ice cream to the order
+            // Prompt user to enter their ice cream order
             while (true)
             {
-                Console.WriteLine("Do you want to add an ice cream order? ('y' / 'n')");
+                Console.WriteLine("---- Enter your ice cream order details ----");
+
+                // Create a new ice cream object
+                IceCream iceCream = MakeiceCreamOrder(); // Define or replace this function
+                newOrder.AddIceCream(iceCream);
+
+                // Prompt user if they want to add another ice cream to the order
+                Console.WriteLine("Do you want to add another ice cream to the order? ('y' / 'n')");
                 string yesno = Console.ReadLine();
 
                 if (yesno.ToLower() == "n")
                 {
                     break;
                 }
-                else
-                {
-                    // Create a new ice cream object
-                    IceCream iceCream = iceCreamOrder();
-                    existingOrder.AddIceCream(iceCream);
-                }
             }
 
             // Link the new order to the customer's current order
-            selectedCustomer.currentOrder = existingOrder;
-
+            selectedCustomer.currentOrder = newOrder;
 
             // Check if the customer has a PointCard and it has a tier
             if (selectedCustomer.rewards != null && selectedCustomer.rewards.tier == "Gold")
             {
-                goldOrderQueue.Add(existingOrder);
+                goldOrderQueue.Add(newOrder);
             }
             else
             {
-                regularOrderQueue.Add(existingOrder);
+                regularOrderQueue.Add(newOrder);
             }
+
 
             // Display message
             Console.WriteLine("Order has been made successfully!");
@@ -408,14 +395,7 @@ void Option4()
         Console.WriteLine("Invalid input. Please enter a valid integer.");
     }
 
-    foreach (var x in goldOrderQueue)
-    {
-        Console.WriteLine(x.ToString());
-    }
-    foreach (var y in regularOrderQueue)
-    {
-        Console.WriteLine(y.ToString());
-    }
+    
 }
 
 
@@ -569,61 +549,56 @@ void Option5()
 
 void DisplayMenu()
 {
-    while (true)
-    {
-        try
-        {
-            Console.WriteLine("\nThe I.C. Treats Management System (enter 0 to break)");
-            Console.WriteLine("=================================");
-            Console.WriteLine("[1] List all customers");
-            Console.WriteLine("[2] List all current orders");
-            Console.WriteLine("[3] Register a new customer");
-            Console.WriteLine("[4] Create a customer's order");
-            Console.WriteLine("[5] Display order details of a customer");
-            Console.WriteLine("[6] Modify order details");
-            Console.Write("\nEnter an option: ");
+    int option;
 
-            int option;
-            if (int.TryParse(Console.ReadLine(), out option))
+    do
+    {
+        Console.WriteLine("\nThe I.C. Treats Management System (enter 0 to break)");
+        Console.WriteLine("=================================");
+        Console.WriteLine("[1] List all customers");
+        Console.WriteLine("[2] List all current orders");
+        Console.WriteLine("[3] Register a new customer");
+        Console.WriteLine("[4] Create a customer's order");
+        Console.WriteLine("[5] Display order details of a customer");
+        Console.WriteLine("[6] Modify order details");
+        Console.Write("\nEnter an option: ");
+
+        if (int.TryParse(Console.ReadLine(), out option))
+        {
+            switch (option)
             {
-                switch (option)
-                {
-                    case 1:
-                        Option1();
-                        break;
-                    case 2:
-                        Option2();
-                        break;
-                    case 3:
-                        Option3();
-                        break;
-                    case 4:
-                        Option4();
-                        break;
-                    case 5:
-                        Option5();
-                        break;
-                    case 6:
-                        // Option6();
-                        break;
-                    case 0:
-                        return; // or break; if you want to exit the loop
-                    default:
-                        Console.WriteLine("Please enter a valid option.");
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Please enter a valid number for the option.");
+                case 1:
+                    Option1();
+                    break;
+                case 2:
+                    Option2();
+                    break;
+                case 3:
+                    Option3();
+                    break;
+                case 4:
+                    Option4();
+                    break;
+                case 5:
+                    Option5();
+                    break;
+                case 6:
+                    // Option6();
+                    break;
+                case 0:
+                    return; // or break; if you want to exit the loop
+                default:
+                    Console.WriteLine("Please enter a valid option.");
+                    break;
             }
         }
-        catch (FormatException ex)
+        else
         {
             Console.WriteLine("Please enter a valid number for the option.");
         }
-    }
+    } while (true);
 }
+
 
 
 

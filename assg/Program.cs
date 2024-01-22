@@ -6,6 +6,7 @@
 
 using assg;
 using System;
+using System.Collections.Specialized;
 using System.Xml.Linq;
 
 // list for customer info
@@ -548,8 +549,18 @@ void Option5()
                     Console.WriteLine("Cup Details:");
                     Console.WriteLine($"Option: {cup.option}");
                     Console.WriteLine($"Scoops: {cup.scoops}");
-                    Console.WriteLine($"Flavours: {string.Join(", ", cup.flavours.Select(f => f.type))}");
-                    Console.WriteLine($"Toppings: {string.Join(", ", cup.toppings.Select(t => t.type))}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in cup.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in cup.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+
                     // Add any other Cup-specific details you want to display
                 }
                 else if (iceCream is Cone cone)
@@ -558,8 +569,18 @@ void Option5()
                     Console.WriteLine($"Option: {cone.option}");
                     Console.WriteLine($"Scoops: {cone.scoops}");
                     Console.WriteLine($"Dipped: {cone.dipped}");
-                    Console.WriteLine($"Flavours: {string.Join(", ", cone.flavours.Select(f => f.type))}");
-                    Console.WriteLine($"Toppings: {string.Join(", ", cone.toppings.Select(t => t.type))}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in cone.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in cone.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+
                     // Add any other Cone-specific details you want to display
                 }
                 else if (iceCream is Waffle waffle)
@@ -568,8 +589,18 @@ void Option5()
                     Console.WriteLine($"Option: {waffle.option}");
                     Console.WriteLine($"Scoops: {waffle.scoops}");
                     Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
-                    Console.WriteLine($"Flavours: {string.Join(", ", waffle.flavours.Select(f => f.type))}");
-                    Console.WriteLine($"Toppings: {string.Join(", ", waffle.toppings.Select(t => t.type))}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in waffle.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in waffle.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+
                     // Add any other Waffle-specific details you want to display
                 }
             }
@@ -676,6 +707,8 @@ void DisplayIceCreamDetails(Order order, IceCream iceCream)
 
 
 //Option 6: 
+
+
 void DisplayMenu()
 {
     int option;
@@ -712,7 +745,7 @@ void DisplayMenu()
                     Option5();
                     break;
                 case 6:
-                    // Option6();
+                    //Option6();
                     break;
                 case 0:
                     return; // or break; if you want to exit the loop

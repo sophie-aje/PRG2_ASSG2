@@ -7,6 +7,7 @@
 using assg;
 using System;
 using System.Collections.Specialized;
+using System.Diagnostics.Metrics;
 using System.Xml.Linq;
 
 // list for customer info
@@ -30,7 +31,9 @@ List<PointCard> pointCards = new List<PointCard>();
 
 List<IceCream> orderHistoryList = new List<IceCream>();
 
+
 Dictionary<int, List<IceCream>> ordersHistoryDictionary = new Dictionary<int, List<IceCream>>();
+Dictionary<int, List<Order>> orderHistoryDetails = new Dictionary<int, List<Order>>();
 
 void ReadOrdersCSV()
 {
@@ -50,6 +53,8 @@ void ReadOrdersCSV()
 
             // Create an Order object
             Order order = new Order(orderId, timeReceived);
+
+            order.timeFulfilled = timeFulfilled;
 
             // Assign time fulfilled
             order.timeFulfilled = timeFulfilled;
@@ -168,8 +173,8 @@ IceCream MakeIceCreamOrder()
 {
     // List to store ice creams
     List<IceCream> iceCreamList = new List<IceCream>();
-    Console.WriteLine("--Ice cream Options--");
-    Console.WriteLine("1.Cup\n2.Cone\n3.Waffle")
+    Console.WriteLine("Ice cream Options");
+    Console.WriteLine("1.Cup\n2.Cone\n3.Waffle");
     Console.Write("Enter the ice cream option: ");
     string option = Console.ReadLine();
 
@@ -204,11 +209,12 @@ IceCream MakeIceCreamOrder()
 
         flavours.Add(flavour);
     }
-
+    
+    Console.WriteLine("Toppings(+$1 each)\nSprinkles\nMochi\nSago\nOreos\n");
     List<Topping> toppings = new List<Topping>();
     for (int i = 0; i < numberOfToppings; i++)
     {
-        Console.Write($"Enter topping {i + 1}: (sprinkles/mochi/sago/oreos) ");
+        Console.Write($"Enter topping {i + 1}: ");
         string toppingName = Console.ReadLine();
         toppings.Add(new Topping(toppingName));
     }
@@ -230,7 +236,8 @@ IceCream MakeIceCreamOrder()
     }
     else if (option == "3")
     {
-        Console.Write("What waffle flavour do you want? (Original/Red Velvet/Charcoal/Pandan): ");
+        Console.WriteLine("Waffle Flavour\nOriginal\nRed Velvet\nCharcoal\nPandan");
+        Console.Write("Waffle flavour: ");
         string wf = Console.ReadLine();
         Waffle new_waffle = new Waffle(option, scoops, flavours, toppings, wf);
         iceCreamList.Add(new_waffle);
@@ -423,6 +430,8 @@ void Option4()
         Console.WriteLine("{0, -15} {1, -15}", abc.name, abc.memberId);
     }
 
+    
+
     Console.Write("Select a customer (enter Customer ID): ");
     if (int.TryParse(Console.ReadLine(), out int cus_id))
     {
@@ -448,6 +457,7 @@ void Option4()
                 Console.WriteLine($"Customer Tier Level: {tierLevel}");
 
                 // create a new order for the selected customer
+                
                 Order newOrder = new Order(cus_id, DateTime.Now);
 
                 // Prompt user to enter their ice cream order
@@ -460,7 +470,7 @@ void Option4()
                     newOrder.AddIceCream(iceCream);
 
                     // Prompt user if they want to add another ice cream to the order
-                    Console.WriteLine("Do you want to add another ice cream to the order? ('y' / 'n')");
+                    Console.Write("Do you want to add another ice cream to the order? ('y' / 'n'): ");
                     string yesno = Console.ReadLine();
 
                     if (yesno.ToLower() == "n")
@@ -474,12 +484,14 @@ void Option4()
 
                 // Check if the customer has a Gold tier
                 if (tierLevel == "Gold")
-                {                    
+                {
+                    newOrder.Id = goldOrderQueue.Count + 1;
                     goldOrderQueue.Add(newOrder);
                     Console.WriteLine("Added to Gold Order Queue.");
                 }
                 else
                 {
+                    newOrder.Id = regularOrderQueue.Count + 1;
                     Console.WriteLine("Added to Regular Order Queue.");
                     regularOrderQueue.Add(newOrder);
                 }
@@ -502,9 +514,7 @@ void Option4()
 
 void Option5()
 {
-    Console.WriteLine("List of Customers:");
-
-    Console.WriteLine("Number of PAST orders per member");
+    //Console.WriteLine(orderHistoryDetails.Count);
     List<IceCream> iceCreamList;
     foreach (var kvp in ordersHistoryDictionary)
     {
@@ -531,19 +541,28 @@ void Option5()
             }
         }
 
-        Console.WriteLine($"\nMember ID: {memberId}, Number of Orders: {pastOrdersCount}");
-        Console.WriteLine($"Member ID: {memberId}, Number of Orders: {currentOrdersCount}");
-    }
+        
 
-   
+        Console.WriteLine($"\nMember ID: {memberId}, Number of Past Orders: {pastOrdersCount}");
+        Console.WriteLine($"Member ID: {memberId}, Number of Current Orders: {currentOrdersCount}");
+    }  
 
 
 
-    Console.Write("Enter the Member ID to retrieve order details: ");
+    Console.Write("\nEnter the Member ID to retrieve order details: ");
     int selectedMemberId;
+    
+
+    
 
     if (int.TryParse(Console.ReadLine(), out selectedMemberId))
     {
+
+        var keys = ordersHistoryDictionary.Keys.ToList();
+
+        
+        Console.WriteLine($"\nID: {order.Id} Time Received : {order.timeReceived} Time Fulfilled : {order.timeFulfilled}");
+
         Console.WriteLine("Displaying orders from PAST HISTORY queues...");
         if (ordersHistoryDictionary.ContainsKey(selectedMemberId))
         {
@@ -555,8 +574,7 @@ void Option5()
             {
                 if (iceCream is Cup cup)
                 {
-                    Console.WriteLine("Cup Details:");
-                    Console.WriteLine($"Option: {cup.option}");
+                    Console.WriteLine($"\nOption: Cup");
                     Console.WriteLine($"Scoops: {cup.scoops}");
                     Console.WriteLine("Flavours:");
                     foreach (Flavour flavour in cup.flavours)
@@ -569,13 +587,10 @@ void Option5()
                     {
                         Console.WriteLine($"  - {topping.type}");
                     }
-
-                    // Add any other Cup-specific details you want to display
                 }
                 else if (iceCream is Cone cone)
                 {
-                    Console.WriteLine("Cone Details:");
-                    Console.WriteLine($"Option: {cone.option}");
+                    Console.WriteLine($"\nOption: Cone");
                     Console.WriteLine($"Scoops: {cone.scoops}");
                     Console.WriteLine($"Dipped: {cone.dipped}");
                     Console.WriteLine("Flavours:");
@@ -589,13 +604,11 @@ void Option5()
                     {
                         Console.WriteLine($"  - {topping.type}");
                     }
-
-                    // Add any other Cone-specific details you want to display
                 }
                 else if (iceCream is Waffle waffle)
                 {
-                    Console.WriteLine("Waffle Details:");
-                    Console.WriteLine($"Option: {waffle.option}");
+
+                    Console.WriteLine($"\nOption: Waffle");
                     Console.WriteLine($"Scoops: {waffle.scoops}");
                     Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
                     Console.WriteLine("Flavours:");
@@ -609,8 +622,6 @@ void Option5()
                     {
                         Console.WriteLine($"  - {topping.type}");
                     }
-
-                    // Add any other Waffle-specific details you want to display
                 }
             }
             Console.WriteLine("\n\nDisplaying orders from CURRENT queues...");
@@ -634,9 +645,13 @@ void Option5()
 
 void PrintOrderDetails(List<Order> orderQueue, string queueName, int selectedMemberId)
 {
-    Console.WriteLine($"{queueName}");
-    Console.WriteLine("Order information:");
-    Console.WriteLine("{0,-7}{1,-20}", "ID", "Time Received");
+    if (orderQueue.Count != null)
+    {
+        Console.WriteLine($"{queueName}");
+        Console.WriteLine("Order information:");
+        Console.WriteLine("{0,-7} {1,-20}", "ID", "Time Received");
+    }
+    
 
     bool foundMember = false;
 

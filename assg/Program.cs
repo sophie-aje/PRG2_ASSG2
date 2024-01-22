@@ -12,7 +12,8 @@ using System.Xml.Linq;
 List<Customer> customerList = new List<Customer>();
 
 List<IceCream> orderList = new List<IceCream>();
-Dictionary<int, List<Order>> ordersDictionary = new Dictionary<int, List<Order>>();
+//List<IceCream> orderHistoryList = new List<IceCream>();
+
 
 // lists to append orders
 List<Order> regularOrderQueue = new List<Order>();
@@ -25,9 +26,10 @@ List<IceCream> iceCreamOrder = order.iceCreamList;
 // list to hold pointcard information
 List<PointCard> pointCards = new List<PointCard>();
 
-Dictionary<int, List<Order>> ordersHistoryDictionary = new Dictionary<int, List<Order>>();
 
+List<IceCream> orderHistoryList = new List<IceCream>();
 
+Dictionary<int, List<IceCream>> ordersHistoryDictionary = new Dictionary<int, List<IceCream>>();
 
 void ReadOrdersCSV()
 {
@@ -55,20 +57,24 @@ void ReadOrdersCSV()
             string option = info[4];
             int scoops = Convert.ToInt32(info[5]);
 
+            IceCream iceCream;
+
             if (option == "Cone")
             {
                 bool dipped = info[6].Equals("TRUE", StringComparison.OrdinalIgnoreCase);
-                Cone cone = new Cone();
-                cone.dipped = dipped;
-                order.iceCreamList.Add(cone);
+                iceCream = new Cone { dipped = dipped };
             }
             else if (option == "Waffle")
             {
                 string waffleFlavour = info[7];
-                Waffle waffle = new Waffle();
-                waffle.waffleFlavour = waffleFlavour;
-                order.iceCreamList.Add(waffle);
+                iceCream = new Waffle { waffleFlavour = waffleFlavour };
             }
+            else // Default to Cup if no valid option is found
+            {
+                iceCream = new Cup();
+            }
+
+            iceCream.scoops = scoops;
 
             // Additional lists for flavours and toppings
             List<Flavour> flavours = new List<Flavour>();
@@ -96,23 +102,24 @@ void ReadOrdersCSV()
                 }
             }
 
-            if (order.iceCreamList.Any())
-            {
-                order.iceCreamList[0].flavours.AddRange(flavours);
-                order.iceCreamList[0].toppings.AddRange(toppings);
-            }
+            iceCream.flavours.AddRange(flavours);
+            iceCream.toppings.AddRange(toppings);
+
+            order.iceCreamList.Add(iceCream);
 
             if (ordersHistoryDictionary.ContainsKey(memberId))
             {
-                ordersHistoryDictionary[memberId].Add(order);
+                ordersHistoryDictionary[memberId].Add(iceCream);
             }
             else
             {
-                ordersHistoryDictionary[memberId] = new List<Order> { order };
+                ordersHistoryDictionary[memberId] = new List<IceCream> { iceCream };
             }
+
         }
     }
 }
+
 
 ReadOrdersCSV();
 
@@ -483,13 +490,19 @@ void Option4()
 }
 
 
-//Option 5: 
 void Option5()
 {
     Console.WriteLine("List of Customers:");
-    foreach (int memberId in ordersDictionary.Keys)
+
+    List<IceCream> iceCreamList;
+    foreach (var kvp in ordersHistoryDictionary)
     {
-        Console.WriteLine($" Member ID: {memberId}");
+        int memberId = kvp.Key;
+        iceCreamList = kvp.Value;
+
+        int numberOfOrders = iceCreamList.Count; // Corrected variable name to iceCreamList
+
+        Console.WriteLine($"Member ID: {memberId}, Number of Orders: {numberOfOrders}");
     }
 
     Console.Write("Enter the Member ID to retrieve order details: ");
@@ -497,119 +510,42 @@ void Option5()
 
     if (int.TryParse(Console.ReadLine(), out selectedMemberId))
     {
-        if (ordersDictionary.ContainsKey(selectedMemberId))
+        if (ordersHistoryDictionary.ContainsKey(selectedMemberId))
         {
-            List<Order> customerOrders = ordersDictionary[selectedMemberId];
+            iceCreamList = ordersHistoryDictionary[selectedMemberId];
 
-            Console.WriteLine("{0,-5} {1,-10} {2,-18} {3,-18} {4,-10} {5,-6} {6,-6} {7,-15} {8,-10} {9,-10} {10,-10} {11,-10} {12,-10} {13,-10} {14,-10}",
-                "Id", "MemberId", "TimeReceived", "TimeFulfilled", "Option", "Scoops", "Dipped", "WaffleFlavour", "Flavour1", "Flavour2", "Flavour3", "Topping1", "Topping2", "Topping3", "Topping4");
-
-            for (int i = 0; i < customerOrders.Count; i++)
+            Console.WriteLine($"Order details for Member ID: {selectedMemberId}");
+            Console.WriteLine($"{iceCreamList.Count}");
+            foreach (IceCream iceCream in iceCreamList)
             {
-                Order order = customerOrders[i];
-
-                foreach (IceCream iceCream in order.iceCreamList)
+                if (iceCream is Cup cup)
                 {
-                    if (iceCream is Cup cup)
-                    {
-                        string[] f = new string[3];
-
-                        for (int x = 0; x < iceCream.flavours.Count && x < f.Length; x++)
-                        {
-                            if (iceCream.flavours[x].type != null)
-                            {
-                                f[x] = iceCream.flavours[x].type;
-                            }
-                            else
-                            {
-                                f[x] = "";
-                            }
-                        }
-
-                        string[] t = new string[4];
-
-                        for (int y = 0; y < iceCream.toppings.Count && y < t.Length; y++)
-                        {
-                            if (iceCream.toppings[y].type != null)
-                            {
-                                t[y] = iceCream.toppings[y].type;
-                            }
-                            else
-                            {
-                                t[y] = "";
-                            }
-                        }
-
-                        Console.WriteLine("{0,-5} {1,-10} {2,-18} {3,-18} {4,-10} {5,-6} {6,-6} {7,-15} {8,-10} {9,-10} {10,-10} {11,-10} {12,-10} {13,-10} {14,-10}",
-                            order.Id, order.timeReceived, order.timeFulfilled, iceCream.option, iceCream.scoops, "", "", f[0], f[1], f[2], t[0], t[1], t[2], t[3]);
-                    }
-                    else if (iceCream is Cone cone)
-                    {
-                        string[] f = new string[3];
-
-                        for (int x = 0; x < iceCream.flavours.Count && x < f.Length; x++)
-                        {
-                            if (iceCream.flavours[x].type != null)
-                            {
-                                f[x] = iceCream.flavours[x].type;
-                            }
-                            else
-                            {
-                                f[x] = "";
-                            }
-                        }
-
-                        string[] t = new string[4];
-
-                        for (int y = 0; y < iceCream.toppings.Count && y < t.Length; y++)
-                        {
-                            if (iceCream.toppings[y].type != null)
-                            {
-                                t[y] = iceCream.toppings[y].type;
-                            }
-                            else
-                            {
-                                t[y] = "";
-                            }
-                        }
-
-                        Console.WriteLine("{0,-5} {1,-10} {2,-18} {3,-18} {4,-10} {5,-6} {6,-6} {7,-15} {8,-10} {9,-10} {10,-10} {11,-10} {12,-10} {13,-10} {14,-10}",
-                            order.Id, order.timeReceived, order.timeFulfilled, iceCream.option, iceCream.scoops, cone.dipped, "", f[0], f[1], f[2], t[0], t[1], t[2], t[3]);
-                    }
-                    else if (iceCream is Waffle waffle)
-                    {
-                        string[] f = new string[3];
-
-                        for (int x = 0; x < iceCream.flavours.Count && x < f.Length; x++)
-                        {
-                            if (iceCream.flavours[x].type != null)
-                            {
-                                f[x] = iceCream.flavours[x].type;
-                            }
-                            else
-                            {
-                                f[x] = "";
-                            }
-                        }
-
-                        string[] t = new string[4];
-
-                        for (int y = 0; y < iceCream.toppings.Count && y < t.Length; y++)
-                        {
-                            if (iceCream.toppings[y].type != null)
-                            {
-                                t[y] = iceCream.toppings[y].type;
-                            }
-                            else
-                            {
-                                t[y] = "";
-                            }
-                        }
-
-                        Console.WriteLine("{0,-5} {1,-10} {2,-18} {3,-18} {4,-10} {5,-6} {6,-6} {7,-15} {8,-10} {9,-10} {10,-10} {11,-10} {12,-10} {13,-10} {14,-10}",
-                            order.Id, order.timeReceived, order.timeFulfilled, iceCream.option, iceCream.scoops, "", waffle.waffleFlavour, f[0], f[1], f[2], t[0], t[1], t[2], t[3]);
-                        
-                    }
+                    Console.WriteLine("Cup Details:");
+                    Console.WriteLine($"Option: {cup.option}");
+                    Console.WriteLine($"Scoops: {cup.scoops}");
+                    Console.WriteLine($"Flavours: {string.Join(", ", cup.flavours.Select(f => f.type))}");
+                    Console.WriteLine($"Toppings: {string.Join(", ", cup.toppings.Select(t => t.type))}");
+                    // Add any other Cup-specific details you want to display
+                }
+                else if (iceCream is Cone cone)
+                {
+                    Console.WriteLine("Cone Details:");
+                    Console.WriteLine($"Option: {cone.option}");
+                    Console.WriteLine($"Scoops: {cone.scoops}");
+                    Console.WriteLine($"Dipped: {cone.dipped}");
+                    Console.WriteLine($"Flavours: {string.Join(", ", cone.flavours.Select(f => f.type))}");
+                    Console.WriteLine($"Toppings: {string.Join(", ", cone.toppings.Select(t => t.type))}");
+                    // Add any other Cone-specific details you want to display
+                }
+                else if (iceCream is Waffle waffle)
+                {
+                    Console.WriteLine("Waffle Details:");
+                    Console.WriteLine($"Option: {waffle.option}");
+                    Console.WriteLine($"Scoops: {waffle.scoops}");
+                    Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
+                    Console.WriteLine($"Flavours: {string.Join(", ", waffle.flavours.Select(f => f.type))}");
+                    Console.WriteLine($"Toppings: {string.Join(", ", waffle.toppings.Select(t => t.type))}");
+                    // Add any other Waffle-specific details you want to display
                 }
             }
         }
@@ -625,10 +561,43 @@ void Option5()
 }
 
 
+void DisplayIceCreamDetails(Order order, IceCream iceCream)
+{
+    // Display common ice cream details
+    Console.WriteLine($"Option: {iceCream.option}");
+    Console.WriteLine($"Scoops: {iceCream.scoops}");
+
+    // Check ice cream type and display specific details
+    if (iceCream is Cone cone)
+    {
+        Console.WriteLine($"Dipped: {cone.dipped}");
+    }
+    else if (iceCream is Waffle waffle)
+    {
+        Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
+    }
+
+    // Display flavours
+    Console.Write("Flavours: ");
+    foreach (Flavour flavour in iceCream.flavours)
+    {
+        Console.Write($"{flavour.type} ");
+    }
+    Console.WriteLine();
+
+    // Display toppings
+    Console.Write("Toppings: ");
+    foreach (Topping topping in iceCream.toppings)
+    {
+        Console.Write($"{topping.type} ");
+    }
+    Console.WriteLine();
+}
 
 
 
-    //Option 6: 
+
+//Option 6: 
 void DisplayMenu()
 {
     int option;

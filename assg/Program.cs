@@ -168,23 +168,32 @@ IceCream MakeIceCreamOrder()
 {
     // List to store ice creams
     List<IceCream> iceCreamList = new List<IceCream>();
+    Console.WriteLine("--Ice cream Options--");
+    Console.WriteLine("1.Cup\n2.Cone\n3.Waffle")
+    Console.Write("Enter the ice cream option: ");
+    string option = Console.ReadLine();
 
     // prompt user to enter ice cream order
     Console.Write("Enter number of scoops: ");
     int scoops = Convert.ToInt32(Console.ReadLine());
 
-    Console.Write("Enter the ice cream option: (\"1\": Cup / \"2\": Cone / \"3\": Waffle ) ");
-    string option = Console.ReadLine();
+    
 
     Console.Write("Enter the number of toppings: ");
     int numberOfToppings = Convert.ToInt32(Console.ReadLine());
 
     List<Flavour> flavours = new List<Flavour>();
 
+    Console.WriteLine("{0,-10} {1,-10}", "Regular Flavours", "Premium Flavours (+$2 per scoop)");
+    Console.WriteLine("{0,-10} {1,-10}", "Vanilla", "Durian");
+    Console.WriteLine("{0,-10} {1,-10}", "Chocolate", "Ube");
+    Console.WriteLine("{0,-10} {1,-10}", "Strawberry", "Sea salt");
+
     for (int i = 0; i < scoops; i++)
     {
-        Console.Write($"Enter flavour for scoop {i + 1}: ");
-        string flavourName = Console.ReadLine();
+        
+        Console.Write($"\nEnter flavour for scoop {i + 1}: ");
+        string flavourName = Console.ReadLine().ToLower(); ;
         Flavour flavour = new Flavour();
 
         if (flavourName == "durian" || flavourName == "ube" || flavourName == "sea salt")

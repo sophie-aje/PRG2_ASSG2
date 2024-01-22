@@ -342,8 +342,13 @@ ReadCustomerCSV();
 
 
     //Option 4: 
-    void Option4()
+void Option4()
 {
+    Console.WriteLine("{15,-10} {15, -10}", "Name", "Member Id");
+    foreach (var xyz in customerList)
+    {
+        Console.WriteLine("{15,-10} {15, -10}", xyz.name, xyz.memberId);
+    }
     // prompt user to select a customer and retrieve the selected customer
     Console.Write("Select a customer (enter Customer ID): ");
 

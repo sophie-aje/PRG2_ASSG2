@@ -12,6 +12,7 @@ using System.Xml.Linq;
 List<Customer> customerList = new List<Customer>();
 
 List<IceCream> orderList = new List<IceCream>();
+Dictionary<int, List<Order>> ordersDictionary = new Dictionary<int, List<Order>>();
 
 // lists to append orders
 List<Order> regularOrderQueue = new List<Order>();
@@ -24,7 +25,7 @@ List<IceCream> iceCreamOrder = order.iceCreamList;
 // list to hold pointcard information
 List<PointCard> pointCards = new List<PointCard>();
 
-Dictionary<int, List<Order>> ordersDictionary = new Dictionary<int, List<Order>>();
+Dictionary<int, List<Order>> ordersHistoryDictionary = new Dictionary<int, List<Order>>();
 
 void ReadOrdersCSV()
 {
@@ -99,13 +100,13 @@ void ReadOrdersCSV()
                 order.iceCreamList[0].toppings.AddRange(toppings);
             }
 
-            if (ordersDictionary.ContainsKey(memberId))
+            if (ordersHistoryDictionary.ContainsKey(memberId))
             {
-                ordersDictionary[memberId].Add(order);
+                ordersHistoryDictionary[memberId].Add(order);
             }
             else
             {
-                ordersDictionary[memberId] = new List<Order> { order };
+                ordersHistoryDictionary[memberId] = new List<Order> { order };
             }
         }
     }
@@ -269,6 +270,12 @@ void Option2()
         foreach (var y in regularOrderQueue)
         {
             Console.WriteLine(y.ToString());
+            
+        }
+
+        for (int i = 0; i < iceCreamOrder.Count; i++)
+        {
+            if 
         }
     }
 

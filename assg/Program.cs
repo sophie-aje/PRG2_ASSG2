@@ -494,22 +494,47 @@ void Option5()
 {
     Console.WriteLine("List of Customers:");
 
+    Console.WriteLine("Number of PAST orders per member");
     List<IceCream> iceCreamList;
     foreach (var kvp in ordersHistoryDictionary)
     {
         int memberId = kvp.Key;
         iceCreamList = kvp.Value;
 
-        int numberOfOrders = iceCreamList.Count; // Corrected variable name to iceCreamList
+        int pastOrdersCount = iceCreamList.Count; // Corrected variable name to iceCreamList
 
-        Console.WriteLine($"Member ID: {memberId}, Number of Orders: {numberOfOrders}");
+        int currentOrdersCount = 0;
+
+        foreach (Order order in goldOrderQueue)
+        { 
+            if (order.Id == memberId)
+            {
+                currentOrdersCount++;
+            }
+        }
+
+        foreach (Order orders in regularOrderQueue)
+        {
+            if (orders.Id == memberId)
+            {
+                currentOrdersCount++;
+            }
+        }
+
+        Console.WriteLine($"\nMember ID: {memberId}, Number of Orders: {pastOrdersCount}");
+        Console.WriteLine($"Member ID: {memberId}, Number of Orders: {currentOrdersCount}");
     }
+
+   
+
+
 
     Console.Write("Enter the Member ID to retrieve order details: ");
     int selectedMemberId;
 
     if (int.TryParse(Console.ReadLine(), out selectedMemberId))
     {
+        Console.WriteLine("Displaying orders from PAST HISTORY queues...");
         if (ordersHistoryDictionary.ContainsKey(selectedMemberId))
         {
             iceCreamList = ordersHistoryDictionary[selectedMemberId];
@@ -548,18 +573,71 @@ void Option5()
                     // Add any other Waffle-specific details you want to display
                 }
             }
+            Console.WriteLine("\n\nDisplaying orders from CURRENT queues...");
+            PrintOrderDetails(goldOrderQueue, "GOLD MEMBER QUEUE", selectedMemberId);
+            PrintOrderDetails(regularOrderQueue, "REGULAR MEMBER QUEUE", selectedMemberId);
+
         }
         else
         {
             Console.WriteLine("Invalid Member ID. No orders found for the specified customer.");
         }
     }
+
     else
     {
         Console.WriteLine("Invalid input. Please enter a valid Member ID.");
     }
 }
 
+
+
+void PrintOrderDetails(List<Order> orderQueue, string queueName, int selectedMemberId)
+{
+    Console.WriteLine($"{queueName}");
+    Console.WriteLine("Order information:");
+    Console.WriteLine("{0,-7}{1,-20}", "ID", "Time Received");
+
+    bool foundMember = false;
+
+    foreach (Order order in orderQueue)
+    {
+        if (order.Id == selectedMemberId)
+        {
+            foundMember = true;
+            Console.WriteLine("{0,-7}{1,-20}", order.Id, order.timeReceived); // Print order details
+
+            foreach (IceCream iceCream in order.iceCreamList)
+            {
+                Console.WriteLine("Ice Cream information:");
+                Console.WriteLine($"Option: {iceCream.option}");
+                Console.WriteLine($"Scoops: {iceCream.scoops}");
+                Console.WriteLine($"Flavour(s) ");
+
+                // Assuming flavours is a List<Flavour>
+                Console.WriteLine("\n{0,-10} {1,-10}", "Type", "Premium");
+                for (int i = 0; i < iceCream.flavours.Count; i++)
+                {
+                    Flavour flavour = iceCream.flavours[i];
+                    Console.WriteLine("{0,-10} {1,-10}", flavour.type, flavour.premium);
+                }
+
+                // Assuming toppings is an array of Topping
+                for (int i = 0; i < iceCream.toppings.Count; i++)
+                {
+                    Topping topping = iceCream.toppings[i];
+                    Console.WriteLine($"Topping {i + 1}: {topping.type}");
+                }
+
+            }
+        }
+    }
+
+    if (!foundMember)
+    {
+        Console.WriteLine($"No orders found for Member ID: {selectedMemberId}");
+    }
+}
 
 void DisplayIceCreamDetails(Order order, IceCream iceCream)
 {

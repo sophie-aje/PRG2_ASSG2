@@ -134,35 +134,38 @@ ReadOrdersCSV();
 
 
 void ReadCustomerCSV()
+{
+    using (StreamReader sr = new StreamReader("customers.csv"))
     {
-        using (StreamReader sr = new StreamReader("customers.csv"))
+        
+
+        // Read the second line
+        string s = sr.ReadLine();
+
+        while ((s = sr.ReadLine()) != null)
         {
-            sr.ReadLine(); 
-            string s;
-            while ((s = sr.ReadLine()) != null)
-            {
-                string[] info = s.Split(',');
-                string c_name = info[0];
-                string c_id = info[1];
-                string dobString = info[2];
-                DateTime.TryParse(dobString, out DateTime c_dob);
+            string[] info = s.Split(',');
+            string c_name = info[0];
+            string c_id = info[1];
+            string dobString = info[2];
+            DateTime.TryParse(dobString, out DateTime c_dob);
+            int id = Convert.ToInt32(c_id);
+            Customer customer = new Customer(c_name, id, c_dob);
+            customerList.Add(customer);
 
-                int id = Convert.ToInt32(c_id);
-                Customer customer = new Customer(c_name, id, c_dob);
-                customerList.Add(customer);
+            string tier = info[3];
+            int points = Convert.ToInt32(info[4]);
+            int punch = Convert.ToInt32(info[5]);
 
-                string tier = info[3];
-                int points = Convert.ToInt32(info[4]);
-                int punch = Convert.ToInt32(info[5]);
-                
-                PointCard pointCard = new PointCard(points, punch);
-                pointCard.tier = tier;
-                customer.rewards = pointCard;
-                pointCards.Add(pointCard);
-            }
+            PointCard pointCard = new PointCard(points, punch);
+            pointCard.tier = tier;
+            customer.rewards = pointCard;
+            pointCards.Add(pointCard);
         }
-
+            
+        
     }
+}
 ReadCustomerCSV();
 
 
@@ -283,7 +286,7 @@ void Option1()
 void Option2()
 {
     
-    if (goldOrderQueue.Count != null)
+    if (goldOrderQueue.Count != 0)
     {
         Console.WriteLine("GOLD MEMBER QUEUE");
         Console.WriteLine("Order information:");
@@ -323,7 +326,7 @@ void Option2()
         Console.WriteLine("Nothing in Gold Queue.");
     }
 
-    if (regularOrderQueue != null)
+    if (regularOrderQueue.Count != 0)
     {
         Console.WriteLine("\nREGULAR MEMBER QUEUE");
         Console.WriteLine("Order Information:");
@@ -378,21 +381,59 @@ void Option3()
     Console.Write("Enter customer name: ");
     string name = Console.ReadLine();
 
-    Console.Write("Enter customer ID number: ");
-    int id = Convert.ToInt32(Console.ReadLine());
+    int id = 0;
+    bool idCheck = true;
 
-    Console.Write("Enter customer data of birth: ");
-    string dobString = Console.ReadLine();
-    DateTime dob;
+    while (idCheck)
+    {
+        try
+        {
+            Console.Write("Enter a 6-digit integer ID: ");
+            id = Convert.ToInt32(Console.ReadLine());
 
-    if (DateTime.TryParse(dobString, out dob))
-    {
-        Console.WriteLine($"Date of Birth: {dob}");
+            // Check if the entered ID has exactly 6 digits
+            if (id >= 100000 && id <= 999999)
+            {
+                // Process the valid ID or perform other actions within the loop
+                idCheck = false; // Exit the loop if a valid ID is provided
+            }
+            else
+            {
+                Console.WriteLine("Error. Please enter a 6-digit ID.");
+            }
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Error. Please enter a valid integer.");
+        }
     }
-    else
+    DateTime dob = DateTime.MinValue; // Default value
+    string dobString = string.Empty;
+
+    while (true)
     {
-        Console.WriteLine("Invalid date format.");
+        Console.Write("Enter customer data of birth in DD/MM/YYYY format: ");
+        dobString = Console.ReadLine();
+
+        if (DateTime.TryParseExact(dobString, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dob))
+        {
+            // Check if the parsed date is in a valid range
+            if (dob.Day >= 1 && dob.Day <= 31 && dob.Month >= 1 && dob.Month <= 12)
+            {
+                Console.WriteLine($"Date of Birth: {dob:dd/MM/yyyy}");
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid date format. Please enter the date again.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid date format. Please enter the date again.");
+        }
     }
+
 
     //create customer object
     Customer customer = new Customer(name, id, dob);
@@ -405,7 +446,7 @@ void Option3()
 
 
     //append customer info into customers csv file
-    string memstatus = "Silver";
+    string memstatus = "Ordinary";
     string sid = Convert.ToString(id);
 
     List<string> newList = new List<string> { name, sid, dobString, memstatus, "0", "0" };
@@ -425,14 +466,14 @@ void Option3()
 //Option 4: 
 void Option4()
 {
-    foreach (var abc in customerList)
+    Console.WriteLine("List of Customers:");
+    foreach (var x in customerList)
     {
-        Console.WriteLine("{0, -15} {1, -15}", abc.name, abc.memberId);
+        Console.WriteLine("{0, -10} {1, -10}", x.name, x.memberId);
     }
 
-    
 
-    Console.Write("Select a customer (enter Customer ID): ");
+    Console.Write("\nSelect a customer (enter Customer ID): ");
     if (int.TryParse(Console.ReadLine(), out int cus_id))
     {
         // find customer
@@ -512,6 +553,7 @@ void Option4()
 }
 
 
+// option 5
 void Option5()
 {
     //Console.WriteLine(orderHistoryDetails.Count);
@@ -731,8 +773,192 @@ void DisplayIceCreamDetails(Order order, IceCream iceCream)
 
 
 //Option 6: 
+void Option6()
+{
+    // List the customers
+    Console.WriteLine("List of Customers:\n");
+    foreach (var x in customerList)
+    {
+        Console.WriteLine("{0, -10} {1, -10}", x.name, x.memberId);
+    }
 
+    // Prompt user to select a customer
+    Console.Write("Enter the Member ID to select a customer: ");
+    if (int.TryParse(Console.ReadLine(), out int selectedMemberId) && ordersHistoryDictionary.TryGetValue(selectedMemberId, out List<IceCream> iceCreamList))
+    {
+        // Retrieve the selected customer's current order
+        Order selectedOrder = new Order(); // Create an instance of the Order class
+        selectedOrder.Id = selectedMemberId; // Assuming Id is used to store Member ID
+        selectedOrder.iceCreamList = iceCreamList;
 
+        Console.WriteLine($"Found orders for Member ID: {selectedMemberId}");
+        Console.WriteLine("Order Information:");
+
+        foreach (IceCream iceCream in selectedOrder.iceCreamList)
+        {
+            if (iceCream is Cup cup)
+            {
+                Console.WriteLine($"\nOption: Cup");
+                Console.WriteLine($"Scoops: {cup.scoops}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in cup.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in cup.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+            else if (iceCream is Cone cone)
+            {
+                Console.WriteLine($"\nOption: Cone");
+                Console.WriteLine($"Scoops: {cone.scoops}");
+                Console.WriteLine($"Dipped: {cone.dipped}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in cone.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in cone.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+            else if (iceCream is Waffle waffle)
+            {
+
+                Console.WriteLine($"\nOption: Waffle");
+                Console.WriteLine($"Scoops: {waffle.scoops}");
+                Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in waffle.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in waffle.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+        }
+
+        // Prompt the user to choose an action
+        Console.Write("Choose an action: \n [1] Modify\n [2] Add new\n [3] Delete existing: ");
+        int option = Convert.ToInt32(Console.ReadLine());
+
+        switch (option)
+        {
+            case 1:
+                // Modify existing ice cream
+                Console.Write("Enter the index of the ice cream to modify: ");
+                if (int.TryParse(Console.ReadLine(), out int modifyIndex) && modifyIndex >= 1 && modifyIndex <= selectedOrder.iceCreamList.Count)
+                {
+                    // Call the ModifyIceCream method on the selected order
+                    selectedOrder.ModifyIceCream(modifyIndex - 1);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input.");
+                }
+                break;
+
+            case 2:
+                // Add new ice cream
+                IceCream newIceCream = MakeIceCreamOrder();
+                selectedOrder.AddIceCream(newIceCream);
+                break;
+
+            case 3:
+                // Delete existing ice cream
+                Console.Write("Enter the index of the ice cream to delete: ");
+                if (int.TryParse(Console.ReadLine(), out int deleteIndex) && deleteIndex >= 1 && deleteIndex <= selectedOrder.iceCreamList.Count)
+                {
+                    // Call the DeleteIceCream method on the selected order
+                    selectedOrder.DeleteIceCream(deleteIndex - 1);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input.");
+                }
+                break;
+
+            default:
+                Console.WriteLine("Invalid action.");
+                break;
+        }
+
+        // Display the new updated order
+        Console.WriteLine("Updated Order:");
+        foreach (IceCream iceCream in selectedOrder.iceCreamList)
+        {
+            if (iceCream is Cup cup)
+            {
+                Console.WriteLine($"\nOption: Cup");
+                Console.WriteLine($"Scoops: {cup.scoops}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in cup.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in cup.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+            else if (iceCream is Cone cone)
+            {
+                Console.WriteLine($"\nOption: Cone");
+                Console.WriteLine($"Scoops: {cone.scoops}");
+                Console.WriteLine($"Dipped: {cone.dipped}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in cone.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in cone.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+            else if (iceCream is Waffle waffle)
+            {
+
+                Console.WriteLine($"\nOption: Waffle");
+                Console.WriteLine($"Scoops: {waffle.scoops}");
+                Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in waffle.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in waffle.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+        }
+
+    }
+    else
+    {
+        Console.WriteLine("Invalid input. Please enter a valid Member ID.");
+    }
+}
+
+// dispplay menu
 void DisplayMenu()
 {
     int option;
@@ -769,7 +995,7 @@ void DisplayMenu()
                     Option5();
                     break;
                 case 6:
-                    //Option6();
+                    Option6();
                     break;
                 case 0:
                     return; // or break; if you want to exit the loop
@@ -784,6 +1010,7 @@ void DisplayMenu()
         }
     } while (true);
 }
+
 
 
 DisplayMenu();

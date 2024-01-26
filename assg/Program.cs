@@ -391,11 +391,9 @@ void Option3()
             Console.Write("Enter a 6-digit integer ID: ");
             id = Convert.ToInt32(Console.ReadLine());
 
-            // Check if the entered ID has exactly 6 digits
             if (id >= 100000 && id <= 999999)
             {
-                // Process the valid ID or perform other actions within the loop
-                idCheck = false; // Exit the loop if a valid ID is provided
+                idCheck = false; 
             }
             else
             {
@@ -407,8 +405,9 @@ void Option3()
             Console.WriteLine("Error. Please enter a valid integer.");
         }
     }
+
     DateTime dob = DateTime.MinValue; // Default value
-    string dobString = string.Empty;
+    string dobString;
 
     while (true)
     {
@@ -417,7 +416,6 @@ void Option3()
 
         if (DateTime.TryParseExact(dobString, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dob))
         {
-            // Check if the parsed date is in a valid range
             if (dob.Day >= 1 && dob.Day <= 31 && dob.Month >= 1 && dob.Month <= 12)
             {
                 Console.WriteLine($"Date of Birth: {dob:dd/MM/yyyy}");
@@ -425,12 +423,12 @@ void Option3()
             }
             else
             {
-                Console.WriteLine("Invalid date format. Please enter the date again.");
+                Console.WriteLine("Invalid date format. Please enter the date in correct format again.");
             }
         }
         else
         {
-            Console.WriteLine("Invalid date format. Please enter the date again.");
+            Console.WriteLine("Invalid date format. Please enter the date in correct format again.");
         }
     }
 

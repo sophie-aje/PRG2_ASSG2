@@ -174,12 +174,13 @@ ReadCustomerCSV();
 
 //---BASIC FEATURES---
 
+// List to store ice creams
+List<IceCream> iceCreamList = new List<IceCream>();
+
 //method to make an icecream order
 IceCream MakeIceCreamOrder()
 {
-    // List to store ice creams
-    List<IceCream> iceCreamList = new List<IceCream>();
-    Console.WriteLine("Ice cream Options");
+        Console.WriteLine("Ice cream Options");
     Console.WriteLine("1.Cup\n2.Cone\n3.Waffle");
     Console.Write("Enter the ice cream option: ");
     string option = Console.ReadLine();
@@ -527,13 +528,13 @@ void Option4()
                 // Check if the customer has a Gold tier
                 if (tierLevel == "Gold")
                 {
-                    newOrder.Id = goldOrderQueue.Count + 1;
+                    newOrder.Id = selectedCustomer.memberId;
                     goldOrderQueue.Add(newOrder);
                     Console.WriteLine("Added to Gold Order Queue.");
                 }
                 else
                 {
-                    newOrder.Id = regularOrderQueue.Count + 1;
+                    newOrder.Id = selectedCustomer.memberId;
                     Console.WriteLine("Added to Regular Order Queue.");
                     regularOrderQueue.Add(newOrder);
                 }
@@ -734,7 +735,7 @@ void PrintOrderDetails(List<Order> orderQueue, string queueName, int selectedMem
 
     if (!foundMember)
     {
-        Console.WriteLine($"No orders found for Member ID: {selectedMemberId}");
+        Console.WriteLine($"No orders found for Member ID in {queueName}: {selectedMemberId}");
     }
 }
 

@@ -557,6 +557,8 @@ void Option4()
 // option 5
 void Option5()
 {
+    Console.WriteLine(goldOrderQueue.Count);
+
     Console.WriteLine("List of Customers:");
     foreach (var x in customerList)
     {
@@ -687,7 +689,7 @@ void Option5()
 
 void PrintOrderDetails(List<Order> orderQueue, string queueName, int selectedMemberId)
 {
-    if (orderQueue.Count != null)
+    if (orderQueue.Count == null)
     {
         Console.WriteLine($"{queueName}");
         Console.WriteLine("Order information:");

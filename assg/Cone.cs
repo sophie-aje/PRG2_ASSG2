@@ -33,7 +33,7 @@ namespace assg
             {
                 base_price = 5.5;
             }
-            else if (scoops == 2)
+            else if (scoops == 3)
             {
                 base_price = 6.5;
             }

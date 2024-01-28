@@ -5,16 +5,17 @@
 // orders.csv meant for order histories (inlcudes time received and time fulfilled)
 
 using assg;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.Metrics;
+using System.Globalization;
 using System.Xml.Linq;
 
 // list for customer info
 List<Customer> customerList = new List<Customer>();
 
 List<IceCream> orderList = new List<IceCream>();
-//List<IceCream> orderHistoryList = new List<IceCream>();
 
 
 // lists to append orders
@@ -29,7 +30,7 @@ List<IceCream> iceCreamOrder = order.iceCreamList;
 List<PointCard> pointCards = new List<PointCard>();
 
 
-List<IceCream> orderHistoryList = new List<IceCream>();
+
 
 
 Dictionary<int, List<IceCream>> ordersHistoryDictionary = new Dictionary<int, List<IceCream>>();
@@ -39,7 +40,8 @@ void ReadOrdersCSV()
 {
     using (StreamReader sr = new StreamReader("orders.csv"))
     {
-        sr.ReadLine(); // Read the heading (skip)
+        sr.ReadLine();
+
         string s;
 
         while ((s = sr.ReadLine()) != null)
@@ -62,6 +64,7 @@ void ReadOrdersCSV()
             // Add ice cream details to the order
             string option = info[4];
             int scoops = Convert.ToInt32(info[5]);
+
 
             IceCream iceCream;
 
@@ -504,11 +507,11 @@ void Option4()
                 {
                     Console.WriteLine("---- Enter your ice cream order details ----");
 
-                    // Create a new ice cream object
-                    IceCream iceCream = MakeIceCreamOrder(); // Assuming you have a function named MakeIceCreamOrder
+                    IceCream iceCream = MakeIceCreamOrder();
                     newOrder.AddIceCream(iceCream);
 
-                    // Prompt user if they want to add another ice cream to the order
+                    
+
                     Console.Write("Do you want to add another ice cream to the order? ('y' / 'n'): ");
                     string yesno = Console.ReadLine();
 
@@ -554,7 +557,12 @@ void Option4()
 // option 5
 void Option5()
 {
-    //Console.WriteLine(orderHistoryDetails.Count);
+    Console.WriteLine("List of Customers:");
+    foreach (var x in customerList)
+    {
+        Console.WriteLine("{0, -10} {1, -10}", x.name, x.memberId);
+    }
+
     List<IceCream> iceCreamList;
     foreach (var kvp in ordersHistoryDictionary)
     {
@@ -581,19 +589,13 @@ void Option5()
             }
         }
 
-        
-
-        Console.WriteLine($"\nMember ID: {memberId}, Number of Past Orders: {pastOrdersCount}");
-        Console.WriteLine($"Member ID: {memberId}, Number of Current Orders: {currentOrdersCount}");
     }  
 
 
 
     Console.Write("\nEnter the Member ID to retrieve order details: ");
-    int selectedMemberId;
-    
-
-    
+    int selectedMemberId;  
+        
 
     if (int.TryParse(Console.ReadLine(), out selectedMemberId))
     {
@@ -769,15 +771,14 @@ void DisplayIceCreamDetails(Order order, IceCream iceCream)
 
 
 
-
 //Option 6: 
 void Option6()
 {
     // List the customers
-    Console.WriteLine("List of Customers:\n");
-    foreach (var x in customerList)
+    Console.WriteLine("List of Customers:");
+    foreach (var customer in customerList)
     {
-        Console.WriteLine("{0, -10} {1, -10}", x.name, x.memberId);
+        Console.WriteLine($"{customer.name} - {customer.memberId}");
     }
 
     // Prompt user to select a customer
@@ -956,7 +957,153 @@ void Option6()
     }
 }
 
-// dispplay menu
+
+// option 8
+void Option8()
+{
+    // prompt the user for the year
+    Console.Write("\nEnter the year: ");
+    int input_year = Convert.ToInt32(Console.ReadLine());
+
+    Dictionary<string, List<double>> totalCharge = new Dictionary<string, List<double>>
+    {
+        {"Jan", new List<double>()},
+        {"Feb", new List<double>()},
+        {"Mar", new List<double>()},
+        {"Apr", new List<double>()},
+        {"May", new List<double>()},
+        {"Jun", new List<double>()},
+        {"Jul", new List<double>()},
+        {"Aug", new List<double>()},
+        {"Sep", new List<double>()},
+        {"Oct", new List<double>()},
+        {"Nov", new List<double>()},
+        {"Dec", new List<double>()}
+    };
+
+
+    // Assuming your IceCream class has a constructor that takes option and scoops
+    IceCream iceCream;
+
+    using (StreamReader sr = new StreamReader("orders.csv"))
+    {
+        sr.ReadLine(); // Read the heading (skip)
+        string s;
+
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] info = s.Split(',');
+
+            int orderId = Convert.ToInt32(info[0]);
+            int memberId = Convert.ToInt32(info[1]);
+            DateTime.TryParse(info[2], out DateTime timeReceived);
+            DateTime.TryParse(info[3], out DateTime timeFulfilled);
+
+            
+
+            // Create an Order object
+            Order order = new Order(orderId, timeReceived);
+            order.timeFulfilled = timeFulfilled;
+
+            // Add ice cream details to the order
+            string option = info[4];
+            int scoops = Convert.ToInt32(info[5]);
+
+            if (option == "Cone")
+            {
+                bool dipped = info[6].Equals("TRUE", StringComparison.OrdinalIgnoreCase);
+                iceCream = new Cone { dipped = dipped, option = option, scoops = scoops };
+            }
+            else if (option == "Waffle")
+            {
+                string waffleFlavour = info[7];
+                iceCream = new Waffle { waffleFlavour = waffleFlavour, option = option, scoops = scoops };
+            }
+            else // Default to Cup if no valid option is found
+            {
+                iceCream = new Cup { option = option, scoops = scoops };
+            }
+
+            // Additional lists for flavours and toppings
+            List<Flavour> flavours = new List<Flavour>();
+            List<Topping> toppings = new List<Topping>();
+
+            for (int i = 8; i <= 10; i++)
+            {
+                if (!string.IsNullOrEmpty(info[i]))
+                {
+                    Flavour flavour = new Flavour();
+                    flavour.type = info[i];
+                    flavour.premium = (info[i] == "Durian" || info[i] == "Ube" || info[i] == "Sea Salt");
+                    flavour.quantity = 1;
+                    flavours.Add(flavour);
+                }
+            }
+
+            for (int i = 11; i <= 14; i++)
+            {
+                if (!string.IsNullOrEmpty(info[i]))
+                {
+                    Topping topping = new Topping();
+                    topping.type = info[i];
+                    toppings.Add(topping);
+                }
+            }
+
+            iceCream.flavours.AddRange(flavours);
+            iceCream.toppings.AddRange(toppings);
+
+            double price;
+
+            // Function to get the month key based on the numeric value
+            static string Month(int monthValue)
+            {
+                switch (monthValue)
+                {
+                    case 1: return "Jan";
+                    case 2: return "Feb";
+                    case 3: return "Mar";
+                    case 4: return "Apr";
+                    case 5: return "May";
+                    case 6: return "Jun";
+                    case 7: return "Jul";
+                    case 8: return "Aug";
+                    case 9: return "Sep";
+                    case 10: return "Oct";
+                    case 11: return "Nov";
+                    case 12: return "Dec";
+                    default: throw new ArgumentOutOfRangeException(nameof(monthValue), "Invalid month value");
+                }
+            }
+
+            if (timeFulfilled.Year == input_year)
+            {
+                int month = timeFulfilled.Month;
+                string monthKey = Month(month);
+                price = iceCream.CalculatePrice();
+                totalCharge[monthKey].Add(price);
+            }       
+        }
+    }
+
+    foreach (var m in totalCharge)
+    {
+        string month = m.Key;
+        List<double> charges = m.Value;
+
+        double count = 0;
+        foreach (var charge in charges)
+        {
+            count += charge;
+        }
+
+        Console.WriteLine($"{month} {input_year}: ${count.ToString("0.00")}");
+    }
+}
+
+
+
+// display menu
 void DisplayMenu()
 {
     int option;
@@ -971,6 +1118,8 @@ void DisplayMenu()
         Console.WriteLine("[4] Create a customer's order");
         Console.WriteLine("[5] Display order details of a customer");
         Console.WriteLine("[6] Modify order details");
+        Console.WriteLine("[7] Process an order and checkout");
+        Console.WriteLine("[8] Display monthly charged amounts breakdown & total charged amounts for the year");
         Console.Write("\nEnter an option: ");
 
         if (int.TryParse(Console.ReadLine(), out option))
@@ -995,6 +1144,12 @@ void DisplayMenu()
                 case 6:
                     Option6();
                     break;
+                case 7:
+                    //Option7();
+                    break;
+                case 8:
+                    Option8();
+                    break;
                 case 0:
                     return; // or break; if you want to exit the loop
                 default:
@@ -1008,7 +1163,5 @@ void DisplayMenu()
         }
     } while (true);
 }
-
-
 
 DisplayMenu();

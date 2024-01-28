@@ -25,15 +25,15 @@ namespace assg
             double base_price = 0;
             if (scoops == 1)
             {
-                base_price = 4;
+                base_price = 7;
             }
             else if (scoops == 2)
             {
-                base_price = 5.5;
+                base_price = 8.5;
             }
-            else if (scoops == 2)
+            else if (scoops == 3)
             {
-                base_price = 6.5;
+                base_price = 9.5;
             }
 
             double wf_price = 0;
@@ -52,6 +52,7 @@ namespace assg
             {
                 wf_price = 3;
             }
+            
             double total_price = base_price + (toppings.Count * 1) + wf_price + prem ;
             return total_price;
         }

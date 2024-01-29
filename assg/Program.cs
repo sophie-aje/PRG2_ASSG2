@@ -1105,6 +1105,182 @@ void Option6()
     }
 }
 
+// OPTION 7
+//option 7
+void Option7()
+{
+
+    // Check if there are orders in the queue
+    if (goldOrderQueue.Count > 0)
+    {
+        Queue<Order> orderqueue = new Queue<Order>(goldOrderQueue);
+        // Dequeue the first order
+        Order currentOrder = orderqueue.Dequeue();
+
+        // Display all ice creams in the order
+        Console.WriteLine("Ice Creams in the Order:");
+        foreach (IceCream iceCream in currentOrder.iceCreamList)
+        {
+
+            if (iceCream is Cup cup)
+            {
+                Console.WriteLine($"\nOption: Cup");
+                Console.WriteLine($"Scoops: {cup.scoops}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in cup.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in cup.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+            else if (iceCream is Cone cone)
+            {
+                Console.WriteLine($"\nOption: Cone");
+                Console.WriteLine($"Scoops: {cone.scoops}");
+                Console.WriteLine($"Dipped: {cone.dipped}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in cone.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in cone.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+            else if (iceCream is Waffle waffle)
+            {
+
+                Console.WriteLine($"\nOption: Waffle");
+                Console.WriteLine($"Scoops: {waffle.scoops}");
+                Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in waffle.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in waffle.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
+            }
+        }
+
+        // Display total bill amount
+        double totalBill = currentOrder.CalculateTotal();
+        Console.WriteLine($"Total Bill Amount: ${totalBill:F2}");
+
+        // Display customer's membership status and points
+        Customer currentCustomer = customerList.FirstOrDefault(c => c.memberId == currentOrder.Id);
+        if (currentCustomer != null)
+        {
+            Console.WriteLine($"Membership Status: {currentCustomer.rewards.tier}");
+            Console.WriteLine($"Points: {currentCustomer.rewards.points}");
+
+            // Check if it's the customer's birthday
+            if (currentCustomer.IsBirthday())
+            {
+                // Find the most expensive ice cream
+                IceCream mostExpensiveIceCream = currentOrder.iceCreamList.OrderByDescending(ic => ic.CalculatePrice()).FirstOrDefault();
+
+
+                // Set its cost to $0.00
+                if (mostExpensiveIceCream != null)
+                {
+                    mostExpensiveIceCream.CalculatePrice();
+                }
+            }
+
+            // Check if punch card is completed
+            if (currentCustomer.rewards.punchCard >= 10)
+            {
+                // Set the cost of the first ice cream in the order to $0.00
+                currentCustomer.rewards.Punch();
+            }
+
+            // Check Pointcard status for redeeming points
+            if (currentCustomer.rewards.tier == "Silver" || currentCustomer.rewards.tier == "Gold")
+            {
+                currentCustomer.rewards.RedeemPoints(totalBill);
+                Console.Write("Press any key to make payment...");
+                Console.ReadKey();
+
+
+                // Example: Display a payment confirmation message
+                Console.WriteLine("\nPayment successful! Thank you for your purchase.");
+
+                // Increment punch card for every ice cream in the order
+                foreach (IceCream iceCream in currentOrder.iceCreamList)
+                {
+                    currentCustomer.rewards.Punch();
+
+                    // Earn points and upgrade membership status accordingly
+
+                    int points = Convert.ToInt32(Math.Floor(totalBill * 0.72));
+                    currentCustomer.rewards.AddPoints(points);
+
+                    if (currentCustomer.rewards.points >= 100)
+                    {
+                        currentCustomer.rewards.tier = "Gold";
+                    }
+                    else if (currentCustomer.rewards.points >= 50)
+                    {
+                        currentCustomer.rewards.tier = "Silver";
+                    }
+                    else
+                    {
+                        currentCustomer.rewards.tier = "Ordinary";
+                    }
+                }
+
+                // Mark the order as fulfilled with the current datetime
+                currentOrder.timeFulfilled = DateTime.Now;
+
+                // Add the fulfilled order object to the customer's order history
+                currentCustomer.orderHistory.Add(currentOrder);
+
+                Console.WriteLine("Order fulfilled and processed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Customer not found.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No orders in the queue.");
+        }
+        using (StreamWriter sw = new StreamWriter("orders.csv", true))
+        {
+            sw.WriteLine($"{currentOrder.Id},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled}");
+            foreach (IceCream icecream in currentOrder.iceCreamList)
+            {
+                if (icecream is Cup cup)
+                {
+                    sw.WriteLine($"{cup.option},{cup.scoops},{cup.flavours},{cup.toppings}");
+                }
+                else if (icecream is Cone cone)
+                {
+                    sw.WriteLine($"{cone.option},{cone.scoops},{cone.dipped},{cone.flavours},{cone.toppings}");
+                }
+                else if (icecream is Waffle waffle)
+                {
+                    sw.WriteLine($"{waffle.option},{waffle.scoops},{waffle.waffleFlavour},{waffle.flavours},{waffle.toppings}");
+                }
+            }
+        }
+    }
+
+}
 
 // option 8
 //VALIDATION DONE
@@ -1319,7 +1495,7 @@ void DisplayMenu()
                     Option8();
                     break;
                 case 0:
-                    return; // or break; if you want to exit the loop
+                    return;
                 default:
                     Console.WriteLine("Please enter a valid option.");
                     break;

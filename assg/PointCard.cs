@@ -20,15 +20,44 @@ namespace assg
         }
         public void AddPoints(int add)
         {
-            points = points + add;
+            int earnedPoints = Convert.ToInt32(Math.Floor(add * 0.72));
+            points += earnedPoints;
         }
 
-        public void RedeemPoints(int redeem)
+        public void RedeemPoints(double totalBill)
         {
-            points = points - redeem;
+            if (tier == "Gold" || tier == "Silver")
+            {
+                Console.WriteLine("How many points do you want to use to offset the bill?");
+                double amount = Convert.ToDouble(Console.ReadLine());
+                if (amount > points)
+                {
+                    Console.WriteLine("Offset amount cannot exceed total points");
+                }
+                else
+                {
+                    points -= Convert.ToInt32(amount); // Deduct redeemed points from the total points
+                    totalBill -= amount * 0.02;
+                    Console.WriteLine($"Final Total Bill Amount: ${totalBill:F2}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Membership status not applicable to redeem points yet");
+                // or throw an exception, depending on your design
+            }
         }
 
-        public void Punch() { }
+
+        public void Punch()
+        {
+            punchCard++;
+            if (punchCard % 10 == 0)
+            {
+                punchCard = 0;
+            }
+        }
+
 
         public override string ToString()
         {

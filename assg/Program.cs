@@ -596,14 +596,14 @@ void Option3()
 
 
 //Option 4: 
+//VALIDAITON DONE
 void Option4()
 {
-    Console.WriteLine("List of Customers:");
+    Console.WriteLine("List of Customers: \n");
     foreach (var x in customerList)
     {
         Console.WriteLine("{0, -10} {1, -10}", x.name, x.memberId);
     }
-
 
     Console.Write("\nSelect a customer (enter Customer ID): ");
     if (int.TryParse(Console.ReadLine(), out int cus_id))
@@ -639,9 +639,7 @@ void Option4()
                     Console.WriteLine("---- Enter your ice cream order details ----");
 
                     IceCream iceCream = MakeIceCreamOrder();
-                    newOrder.AddIceCream(iceCream);
-
-                    
+                    newOrder.AddIceCream(iceCream);                    
 
                     Console.Write("Do you want to add another ice cream to the order? ('y' / 'n'): ");
                     string yesno = Console.ReadLine();
@@ -668,8 +666,7 @@ void Option4()
                     Console.WriteLine("Added to Regular Order Queue.");
                     regularOrderQueue.Add(newOrder);
                 }
-
-                // Display message
+                
                 Console.WriteLine("Order has been made successfully!");
             }            
         }
@@ -688,8 +685,6 @@ void Option4()
 // option 5
 void Option5()
 {
-    Console.WriteLine(goldOrderQueue.Count);
-
     Console.WriteLine("List of Customers:");
     foreach (var x in customerList)
     {
@@ -697,12 +692,13 @@ void Option5()
     }
 
     List<IceCream> iceCreamList;
+
     foreach (var kvp in ordersHistoryDictionary)
     {
         int memberId = kvp.Key;
         iceCreamList = kvp.Value;
 
-        int pastOrdersCount = iceCreamList.Count; // Corrected variable name to iceCreamList
+        int pastOrdersCount = iceCreamList.Count; 
 
         int currentOrdersCount = 0;
 
@@ -727,8 +723,7 @@ void Option5()
 
 
     Console.Write("\nEnter the Member ID to retrieve order details: ");
-    int selectedMemberId;  
-        
+    int selectedMemberId;       
 
     if (int.TryParse(Console.ReadLine(), out selectedMemberId))
     {
@@ -818,6 +813,7 @@ void Option5()
 
 
 
+//VALIDATION DONE
 void PrintOrderDetails(List<Order> orderQueue, string queueName, int selectedMemberId)
 {
     if (orderQueue.Count == null)
@@ -825,8 +821,7 @@ void PrintOrderDetails(List<Order> orderQueue, string queueName, int selectedMem
         Console.WriteLine($"{queueName}");
         Console.WriteLine("Order information:");
         Console.WriteLine("{0,-7} {1,-20}", "ID", "Time Received");
-    }
-    
+    }    
 
     bool foundMember = false;
 
@@ -869,6 +864,7 @@ void PrintOrderDetails(List<Order> orderQueue, string queueName, int selectedMem
     }
 }
 
+//VALIDATION DONE
 void DisplayIceCreamDetails(Order order, IceCream iceCream)
 {
     // Display common ice cream details
@@ -905,13 +901,13 @@ void DisplayIceCreamDetails(Order order, IceCream iceCream)
 
 
 //Option 6: 
+//VALIDATION DONE
 void Option6()
 {
-    // List the customers
-    Console.WriteLine("List of Customers:");
-    foreach (var customer in customerList)
+    Console.WriteLine("List of Customers: \n");
+    foreach (var x in customerList)
     {
-        Console.WriteLine($"{customer.name} - {customer.memberId}");
+        Console.WriteLine("{0, -10} {1, -10}", x.name, x.memberId);
     }
 
     // Prompt user to select a customer
@@ -981,15 +977,34 @@ void Option6()
             }
         }
 
-        // Prompt the user to choose an action
-        Console.Write("Choose an action: \n [1] Modify\n [2] Add new\n [3] Delete existing: ");
-        int option = Convert.ToInt32(Console.ReadLine());
+        int option;
+        while (true)
+        {
+            // prompt user to enter ice cream option
+            Console.Write("Choose an action: \n [1] Modify\n [2] Add new\n [3] Delete existing: ");
+
+            // convert user input to an string
+            option = Convert.ToInt32(Console.ReadLine());
+
+            try
+            {
+                option = option;
+                break;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid integer.");
+            }
+        }
+
 
         switch (option)
         {
             case 1:
                 // Modify existing ice cream
                 Console.Write("Enter the index of the ice cream to modify: ");
+
+                // NEED KNOW HOW TO EXPLAIN
                 if (int.TryParse(Console.ReadLine(), out int modifyIndex) && modifyIndex >= 1 && modifyIndex <= selectedOrder.iceCreamList.Count)
                 {
                     // Call the ModifyIceCream method on the selected order
@@ -1092,11 +1107,30 @@ void Option6()
 
 
 // option 8
+//VALIDATION DONE
 void Option8()
 {
     // prompt the user for the year
-    Console.Write("\nEnter the year: ");
-    int input_year = Convert.ToInt32(Console.ReadLine());
+    
+    int input_year;
+    while (true)
+    {
+        // prompt user to enter ice cream option
+        Console.Write("\nEnter the year: ");
+        // convert user input to an string
+        input_year = Convert.ToInt32(Console.ReadLine());
+
+        try
+        {
+            input_year = input_year;
+            break;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input. Please enter a valid integer. example: 2023");
+        }
+    }
+
 
     Dictionary<string, List<double>> totalCharge = new Dictionary<string, List<double>>
     {
@@ -1237,6 +1271,7 @@ void Option8()
 
 
 // display menu
+//VALIDATION DONE
 void DisplayMenu()
 {
     int option;

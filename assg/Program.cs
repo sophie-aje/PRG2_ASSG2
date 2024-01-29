@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.Metrics;
 using System.Globalization;
+using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
 
@@ -1259,22 +1260,180 @@ void Option7()
         {
             Console.WriteLine("No orders in the queue.");
         }
+
+        int orderID = 0;
+        using (StreamReader sr = new StreamReader("orders.csv"))
+        {
+            string? s = sr.ReadLine(); // read the heading
+                                       // display the heading
+            if (s != null)
+            {
+                
+            }
+            while ((s = sr.ReadLine()) != null)
+            {
+                string[] content = s.Split(',');
+                orderID = Convert.ToInt32(content[0]) + 1;
+            }
+        }
+
+        
+
+
         using (StreamWriter sw = new StreamWriter("orders.csv", true))
         {
-            sw.WriteLine($"{currentOrder.Id},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled}");
             foreach (IceCream icecream in currentOrder.iceCreamList)
             {
                 if (icecream is Cup cup)
                 {
-                    sw.WriteLine($"{cup.option},{cup.scoops},{cup.flavours},{cup.toppings}");
+                    var f1 = "";
+                    var f2 = "";
+                    var f3 = "";
+
+                    int count1 = 0;
+                    foreach (Flavour flavour in cup.flavours)
+                    {
+                        count1 ++;
+                        if (count1 == 1)
+                        {
+                            f1 = flavour.type;
+                        }
+                        else if (count1 == 2)
+                        {
+                            f2 = flavour.type;
+                        }
+                        else if (count1 == 3)
+                        {
+                            f3 = flavour.type;
+                        }
+
+                    }
+
+                    var t1 = "";
+                    var t2 = "";
+                    var t3 = "";
+
+                    int count2 = 0;
+                    foreach (Topping topping in cup.toppings)
+                    {
+                        count2 ++;
+                        if (count2 == 1)
+                        {
+                            t1 = topping.type;
+                        }
+                        else if (count2 == 2)
+                        {
+                            t2 = topping.type;
+                        }
+                        else if (count2 == 3)
+                        {
+                            t3 = topping.type;
+                        }
+
+                    }
+
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cup"},{cup.scoops},{""},{""},{f1},{f2},{f3},{t1},{t2},{t3}");
+                    
                 }
                 else if (icecream is Cone cone)
                 {
-                    sw.WriteLine($"{cone.option},{cone.scoops},{cone.dipped},{cone.flavours},{cone.toppings}");
+                    var f1 = "";
+                    var f2 = "";
+                    var f3 = "";
+
+                    int count1 = 0;
+                    foreach (Flavour flavour in cone.flavours)
+                    {
+                        count1++;
+                        if (count1 == 1)
+                        {
+                            f1 = flavour.type;
+                        }
+                        else if (count1 == 2)
+                        {
+                            f2 = flavour.type;
+                        }
+                        else if (count1 == 3)
+                        {
+                            f3 = flavour.type;
+                        }
+
+                    }
+
+                    var t1 = "";
+                    var t2 = "";
+                    var t3 = "";
+
+                    int count2 = 0;
+                    foreach (Topping topping in cone.toppings)
+                    {
+                        count2++;
+                        if (count2 == 1)
+                        {
+                            t1 = topping.type;
+                        }
+                        else if (count2 == 2)
+                        {
+                            t2 = topping.type;
+                        }
+                        else if (count2 == 3)
+                        {
+                            t3 = topping.type;
+                        }
+
+                    }
+
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cone"},{cone.scoops},{cone.dipped},{""},{f1},{f2},{f3},{t1},{t2},{t3}");
                 }
                 else if (icecream is Waffle waffle)
                 {
-                    sw.WriteLine($"{waffle.option},{waffle.scoops},{waffle.waffleFlavour},{waffle.flavours},{waffle.toppings}");
+                    var f1 = "";
+                    var f2 = "";
+                    var f3 = "";
+
+                    int count1 = 0;
+                    foreach (Flavour flavour in waffle.flavours)
+                    {
+                        count1++;
+                        if (count1 == 1)
+                        {
+                            f1 = flavour.type;
+                        }
+                        else if (count1 == 2)
+                        {
+                            f2 = flavour.type;
+                        }
+                        else if (count1 == 3)
+                        {
+                            f3 = flavour.type;
+                        }
+
+                    }
+
+                    var t1 = "";
+                    var t2 = "";
+                    var t3 = "";
+
+                    int count2 = 0;
+                    foreach (Topping topping in waffle.toppings)
+                    {
+                        count2++;
+                        if (count2 == 1)
+                        {
+                            t1 = topping.type;
+                        }
+                        else if (count2 == 2)
+                        {
+                            t2 = topping.type;
+                        }
+                        else if (count2 == 3)
+                        {
+                            t3 = topping.type;
+                        }
+
+                    }
+
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Waffle"},{waffle.scoops},{""},{waffle.waffleFlavour},{f1},{f2},{f3},{t1},{t2},{t3}");
                 }
             }
         }
@@ -1489,7 +1648,7 @@ void DisplayMenu()
                     Option6();
                     break;
                 case 7:
-                    //Option7();
+                    Option7();
                     break;
                 case 8:
                     Option8();

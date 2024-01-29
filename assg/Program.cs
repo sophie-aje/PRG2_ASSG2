@@ -7,10 +7,12 @@
 using assg;
 using Microsoft.VisualBasic.FileIO;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Xml.Linq;
+using static System.Formats.Asn1.AsnWriter;
 
 // list for customer info
 List<Customer> customerList = new List<Customer>();
@@ -29,7 +31,8 @@ List<IceCream> iceCreamOrder = order.iceCreamList;
 // list to hold pointcard information
 List<PointCard> pointCards = new List<PointCard>();
 
-
+// List to store ice creams
+List<IceCream> iceCreamList = new List<IceCream>();
 
 
 
@@ -95,7 +98,7 @@ void ReadOrdersCSV()
                 {
                     Flavour flavour = new Flavour();
                     flavour.type = info[i];
-                    flavour.premium = (info[i] == "durian" || info[i] == "ube" || info[i] == "sea salt");
+                    flavour.premium = (info[i] == "Durian" || info[i] == "Ube" || info[i] == "Sea Salt");
                     flavour.quantity = 1;
                     flavours.Add(flavour);
                 }
@@ -128,14 +131,9 @@ void ReadOrdersCSV()
         }
     }
 }
-
-
 ReadOrdersCSV();
 
-
-
-
-
+//VALIDATION DONE
 void ReadCustomerCSV()
 {
     using (StreamReader sr = new StreamReader("customers.csv"))
@@ -174,41 +172,131 @@ ReadCustomerCSV();
 
 //---BASIC FEATURES---
 
-// List to store ice creams
-List<IceCream> iceCreamList = new List<IceCream>();
+
 
 //method to make an icecream order
+
+//VALIDATION DONE
 IceCream MakeIceCreamOrder()
 {
-        Console.WriteLine("Ice cream Options");
+    Console.WriteLine("Ice cream Options");
     Console.WriteLine("1.Cup\n2.Cone\n3.Waffle");
-    Console.Write("Enter the ice cream option: ");
-    string option = Console.ReadLine();
 
-    // prompt user to enter ice cream order
-    Console.Write("Enter number of scoops: ");
-    int scoops = Convert.ToInt32(Console.ReadLine());
+    string option;
+    while (true)
+    {
+        // prompt user to enter ice cream option
+        Console.Write("Enter the ice cream option: ");
 
-    
+        // convert user input to an string
+        option = Console.ReadLine();
 
-    Console.Write("Enter the number of toppings: ");
-    int numberOfToppings = Convert.ToInt32(Console.ReadLine());
+        try
+        {
+            option = option;
+            break;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input. Please enter a valid integer.");
+        }
+    }
 
+    int scoops;
+    while (true)
+    {
+        // prompt user to enter ice cream order
+        Console.Write("Enter number of scoops: ");
+
+        // Attempt to convert user input to an integer
+        scoops = Convert.ToInt32(Console.ReadLine());
+
+        try
+        {
+            scoops = Convert.ToInt32(scoops);
+            break;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input. Please enter a valid integer.");
+        }
+    }
+
+    int numberOfToppings;
+    while (true)
+    {
+        // prompt user to enter number of toppings
+        Console.Write("Enter the number of toppings: ");
+
+        // Attempt to convert user input to an integer
+        numberOfToppings = Convert.ToInt32(Console.ReadLine());
+
+        try
+        {
+            numberOfToppings = Convert.ToInt32(numberOfToppings);
+            break;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input. Please enter a valid integer.");
+        }
+    }
+
+    // list to store flavours
     List<Flavour> flavours = new List<Flavour>();
+
 
     Console.WriteLine("{0,-10} {1,-10}", "Regular Flavours", "Premium Flavours (+$2 per scoop)");
     Console.WriteLine("{0,-10} {1,-10}", "Vanilla", "Durian");
     Console.WriteLine("{0,-10} {1,-10}", "Chocolate", "Ube");
     Console.WriteLine("{0,-10} {1,-10}", "Strawberry", "Sea salt");
 
+
+    string l_flavourName;
+    string[] word;
     for (int i = 0; i < scoops; i++)
-    {
-        
-        Console.Write($"\nEnter flavour for scoop {i + 1}: ");
-        string flavourName = Console.ReadLine().ToLower(); ;
+    {    
+        while (true)
+        {
+            // prompt user to enter number of toppings
+            Console.Write($"\nEnter flavour for scoop {i + 1}: ");
+
+            // Attempt to convert user input to an integer
+            l_flavourName = Console.ReadLine().ToLower(); ;
+            //string c_flavourName = char.ToUpper(flavourName[0]) + flavourName.Substring(1);
+            word = l_flavourName.Split(' ');
+            try
+            {
+                l_flavourName = l_flavourName;
+                break;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid string. Only words allowed.");
+            }
+        }
+
+        List<string> wordJoin = new List<string>();
+        bool first = true;
+        foreach (string s in word)
+        {
+            if (first)
+            {
+                string c_flavourName = char.ToUpper(l_flavourName[0]) + l_flavourName.Substring(1);
+                wordJoin.Add(c_flavourName);
+            }
+            else
+            {
+                Console.Write("{0} ", s);
+            }
+        }
+
+        string flavourName = string.Join("", wordJoin);
+
+
         Flavour flavour = new Flavour();
 
-        if (flavourName == "durian" || flavourName == "ube" || flavourName == "sea salt")
+        if (flavourName == "Durian" || flavourName == "Ube" || flavourName == "Sea Salt")
         {
             flavour.type = flavourName;
             flavour.premium = true;
@@ -218,6 +306,8 @@ IceCream MakeIceCreamOrder()
     }
     
     Console.WriteLine("Toppings(+$1 each)\nSprinkles\nMochi\nSago\nOreos\n");
+
+    // list to store toppings
     List<Topping> toppings = new List<Topping>();
     for (int i = 0; i < numberOfToppings; i++)
     {

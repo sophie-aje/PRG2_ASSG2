@@ -243,8 +243,6 @@ IceCream MakeIceCreamOrder()
         }
     }
 
-    // list to store flavours
-    List<Flavour> flavours = new List<Flavour>();
 
 
     Console.WriteLine("{0,-10} {1,-10}", "Regular Flavours", "Premium Flavours (+$2 per scoop)");
@@ -255,116 +253,85 @@ IceCream MakeIceCreamOrder()
 
     string l_flavourName;
     string[] word;
-    for (int i = 0; i < scoops; i++)
-    {    
-        while (true)
-        {
-            // prompt user to enter number of toppings
-            Console.Write($"\nEnter flavour for scoop {i + 1}: ");
 
-            // Attempt to convert user input to an integer
-            l_flavourName = Console.ReadLine().ToLower(); ;
-            //string c_flavourName = char.ToUpper(flavourName[0]) + flavourName.Substring(1);
-            word = l_flavourName.Split(' ');
-            try
+    List<Flavour> flavour = new List<Flavour>();
+    List<Topping> toppings = new List<Topping>();
+
+    for (int i = 0; i < scoops; i++)
+    {
+
+        Console.WriteLine("Flavours:");
+        for (int j = 0; j < scoops; j++) // Assuming you have 3 flavours
+        {
+            Console.Write($"Enter flavour {j + 1}: ");
+            string flavourName = Console.ReadLine();
+
+            // Capitalize the first letter of the flavour name
+            string c_flavourName = char.ToUpper(flavourName[0]) + flavourName.Substring(1);
+
+            Flavour fv = new Flavour();
+
+            // Check if the flavour name is one of the specified options
+            if (c_flavourName == "Durian" || c_flavourName == "Ube" || c_flavourName == "Sea Salt")
             {
-                l_flavourName = l_flavourName;
-                break;
+                fv.type = c_flavourName;
+                fv.premium = true;
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Invalid input. Please enter a valid string. Only words allowed.");
-            }
+
+            flavour.Add(fv);
         }
 
-        List<string> wordJoin = new List<string>();
-        bool first = true;
-        foreach (string s in word)
+        Console.WriteLine("Toppings(+$1 each)\nSprinkles\nMochi\nSago\nOreos\n");
+
+        // Prompt user to enter the number of toppings
+
+
+        // Collect toppings
+        for (int k = 0; k < numberOfToppings; k++)
         {
-            if (first)
+            Console.Write($"Enter topping {k + 1}: ");
+            string toppingName = Console.ReadLine();
+
+            // Check if the topping name is one of the specified options
+            if (toppingName == "Sprinkles" || toppingName == "Mochi" || toppingName == "Sago" || toppingName == "Oreos")
             {
-                string c_flavourName = char.ToUpper(l_flavourName[0]) + l_flavourName.Substring(1);
-                wordJoin.Add(c_flavourName);
+                toppings.Add(new Topping(toppingName));
             }
             else
             {
-                Console.Write("{0} ", s);
+                Console.WriteLine("Invalid topping name. Please enter one of the allowed toppings.");
+                i--; // Decrement i to re-enter the current topping
             }
         }
 
-        string flavourName = string.Join("", wordJoin);
-
-
-        Flavour flavour = new Flavour();
-
-        if (flavourName == "Durian" || flavourName == "Ube" || flavourName == "Sea Salt")
+        // Creating ice cream object
+        if (option == "1")
         {
-            flavour.type = flavourName;
-            flavour.premium = true;
+            Cup new_cup = new Cup(option, scoops, flavour, toppings);
+            iceCreamList.Add(new_cup);
+            return new_cup;
         }
-
-        flavours.Add(flavour);
-    }
-    
-    Console.WriteLine("Toppings(+$1 each)\nSprinkles\nMochi\nSago\nOreos\n");
-
-    // list to store toppings
-    List<Topping> toppings = new List<Topping>();
-    for (int i = 0; i < numberOfToppings; i++)
-    {
-        Console.Write($"Enter topping {i + 1}: ");
-        string toppingName;
-        while (true)
+        else if (option == "2")
         {
-            // prompt user to enter number of toppings
-            Console.Write("Enter the number of toppings: ");
-
-            // Attempt to convert user input to an integer
-            toppingName = Console.ReadLine();
-
-            try
-            {
-                toppingName = toppingName;
-                break;
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Invalid input. Please enter a valid string. Only letters allowed.");
-            }
+            Console.Write("Do you want the cone dipped? (true/false): ");
+            bool isDipped = bool.Parse(Console.ReadLine());
+            Cone new_cone = new Cone(option, scoops, flavour, toppings, isDipped);
+            iceCreamList.Add(new_cone);
+            return new_cone;
         }
-
-        toppings.Add(new Topping(toppingName));
+        else if (option == "3")
+        {
+            Console.WriteLine("Waffle Flavour\nOriginal\nRed Velvet\nCharcoal\nPandan");
+            Console.Write("Waffle flavour: ");
+            string wf = Console.ReadLine();
+            Waffle new_waffle = new Waffle(option, scoops, flavour, toppings, wf);
+            iceCreamList.Add(new_waffle);
+            return new_waffle;
+        }
+        
     }
-
-    // Creating ice cream object
-    if (option == "1")
-    {
-        Cup new_cup = new Cup(option, scoops, flavours, toppings);
-        iceCreamList.Add(new_cup);
-        return new_cup;
-    }
-    else if (option == "2")
-    {
-        Console.Write("Do you want the cone dipped? (true/false): ");
-        bool isDipped = bool.Parse(Console.ReadLine());
-        Cone new_cone = new Cone(option, scoops, flavours, toppings, isDipped);
-        iceCreamList.Add(new_cone);
-        return new_cone;
-    }
-    else if (option == "3")
-    {
-        Console.WriteLine("Waffle Flavour\nOriginal\nRed Velvet\nCharcoal\nPandan");
-        Console.Write("Waffle flavour: ");
-        string wf = Console.ReadLine();
-        Waffle new_waffle = new Waffle(option, scoops, flavours, toppings, wf);
-        iceCreamList.Add(new_waffle);
-        return new_waffle;
-    }
-    else
-    {
-        Console.WriteLine("Error. Please key in options from 1 to 3.");
-        return null;
-    }
+    Console.WriteLine("Error. Please key in options from 1 to 3.");
+    return null;
 }
 
 

@@ -639,7 +639,7 @@ void Option3()
     string name;
     while (true)
     {
-        Console.Write("Enter customer name: ");
+        Console.Write("Enter customer's first name: ");
 
         name = Console.ReadLine();
 
@@ -653,6 +653,10 @@ void Option3()
             Console.WriteLine("Invalid input. Please enter a valid string. Only letters allowed.");
         }
     }
+
+    
+    name = string.IsNullOrEmpty(name) ? name : char.ToUpper(name[0]) + name.Substring(1);
+
 
 
     int id = 0;
@@ -731,6 +735,7 @@ void Option3()
         Console.WriteLine("Registration status: SUCCESSFUL");
     }
 
+    customerList.Add(customer);
 }
 
 

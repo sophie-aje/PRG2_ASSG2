@@ -481,9 +481,9 @@ void Option1()
 void Option2()
 {
 
+    Console.WriteLine("\n---GOLD MEMBER QUEUE---");
     if (goldOrderQueue.Count != 0)
     {
-        Console.WriteLine("GOLD MEMBER QUEUE");
         Console.WriteLine("Order information:");
         Console.WriteLine("{0,-7}{1,-20}", "ID", "Time Received");
 
@@ -553,7 +553,7 @@ void Option2()
         Console.WriteLine("Nothing in Gold Queue.");
     }
 
-    Console.WriteLine("\nREGULAR MEMBER QUEUE");
+    Console.WriteLine("\n---REGULAR MEMBER QUEUE---");
     if (regularOrderQueue.Count != 0)
     {
         Console.WriteLine("Order Information:");
@@ -561,7 +561,7 @@ void Option2()
 
         foreach (Order order in regularOrderQueue)
         {
-            Console.WriteLine("{0,-7}{1,-20}{2,-20}", order.Id, order.timeReceived); // Print order details
+            Console.WriteLine("{0,-7}{1,-20}", order.Id, order.timeReceived); // Print order details
 
             foreach (IceCream iceCream in order.iceCreamList)
             {
@@ -623,7 +623,7 @@ void Option2()
     }
     else
     {
-        Console.WriteLine("\nNothing in Regular Queue.");
+        Console.WriteLine("Nothing in Regular Queue.");
     }
 }
 
@@ -662,27 +662,43 @@ void Option3()
     int id = 0;
     bool idCheck = true;
 
-    while (idCheck)
+    while (true)
     {
-        try
-        {
-            Console.Write("Enter a 6-digit integer ID: ");
-            id = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Enter a 6-digit integer ID: ");
 
-            if (id >= 100000 && id <= 999999)
-            {
-                idCheck = false; 
-            }
-            else
-            {
-                Console.WriteLine("Error. Please enter a 6-digit ID.");
-            }
-        }
-        catch (FormatException)
+        id = Convert.ToInt32(Console.ReadLine());
+
+        if (customerList.Any(customer => customer.memberId == id))
         {
-            Console.WriteLine("Error. Please enter a valid integer.");
+            Console.WriteLine($"Customer with MemberID {id} is in the list. Please re-enter.");
+        }
+        else
+        {
+            while (idCheck)
+            {
+                try
+                {
+                    Console.Write("Enter a 6-digit integer ID: ");
+                    id = Convert.ToInt32(Console.ReadLine());
+
+                    if (id >= 100000 && id <= 999999)
+                    {
+                        idCheck = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error. Please enter a 6-digit ID.");
+                    }
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Error. Please enter a valid integer.");
+                }
+            }
+            break; 
         }
     }
+
 
     string dobString;
     DateTime dob;
@@ -1006,7 +1022,7 @@ void PrintOrderDetails(List<Order> orderQueue, string queueName, int selectedMem
 
     if (!foundMember)
     {
-        Console.WriteLine($"No orders found for Member ID in {queueName}: {selectedMemberId}");
+        Console.WriteLine($"No orders found for Member ID {selectedMemberId} in {queueName}");
     }
 }
 
@@ -1600,7 +1616,6 @@ void Option7()
             }
         }
     }
-
 }
 
 // option 8

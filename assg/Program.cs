@@ -186,39 +186,53 @@ IceCream MakeIceCreamOrder()
     Console.WriteLine("\nIce Cream Options");
     Console.WriteLine("\n1.Cup\n2.Cone\n3.Waffle");
 
-    string option;
+    
+    int op;
     while (true)
     {
         // prompt user to enter ice cream option
-        Console.Write("Enter the ice cream option: ");
-
-        // convert user input to an string
-        option = Console.ReadLine();
+        Console.Write("Enter the ice cream option (CHOOSE 1, 2 OR 3): ");
 
         try
         {
-            option = option;
-            break;
+            op = Convert.ToInt32(Console.ReadLine());
+
+            if (op >= 1 && op <= 3)
+            {
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number between 1 and 3.");
+            }
         }
         catch (FormatException)
         {
             Console.WriteLine("Invalid input. Please enter a valid integer.");
         }
     }
+    string option = Convert.ToString(op);
+
+
 
     int scoops;
     while (true)
     {
         // prompt user to enter ice cream order
-        Console.Write("Enter number of scoops: ");
-
-        // Attempt to convert user input to an integer
-        scoops = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Enter number of scoops (MIN 1 MAX 3): ");
 
         try
         {
-            scoops = Convert.ToInt32(scoops);
-            break;
+            scoops = Convert.ToInt32(Console.ReadLine());
+
+            if (scoops >= 1 && scoops <= 3)
+            {
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number between 1 and 3 scoops.");
+            }
         }
         catch (FormatException)
         {
@@ -226,19 +240,26 @@ IceCream MakeIceCreamOrder()
         }
     }
 
+
+
     int numberOfToppings;
     while (true)
     {
-        // prompt user to enter number of toppings
-        Console.Write("Enter the number of toppings: ");
-
-        // Attempt to convert user input to an integer
-        numberOfToppings = Convert.ToInt32(Console.ReadLine());
+        // prompt user to enter ice cream order
+        Console.Write("Enter number of toppings (MIN 1 MAX 4): ");
 
         try
         {
-            numberOfToppings = Convert.ToInt32(numberOfToppings);
-            break;
+            numberOfToppings = Convert.ToInt32(Console.ReadLine());
+
+            if (numberOfToppings >= 1 && numberOfToppings <= 3)
+            {
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number between 1 and 4 toppings");
+            }
         }
         catch (FormatException)
         {
@@ -403,6 +424,18 @@ IceCream MakeIceCreamOrder()
         Console.WriteLine("Waffle Flavour\nOriginal\nRed Velvet\nCharcoal\nPandan");
         Console.Write("Waffle flavour: ");
         string wf = Console.ReadLine();
+
+        string[] wc = wf.Split(' ');
+
+        for (int w = 0; w < wc.Length; w++)
+        {
+            if (!string.IsNullOrEmpty(wc[w]))
+            {
+                wc[w] = char.ToUpper(wc[w][0]) + wc[w].Substring(1);
+            }
+        }
+        wf = string.Join(' ', wc);
+
         Waffle new_waffle = new Waffle(option, scoops, flavour, toppings, wf);
         iceCreamList.Add(new_waffle);
         return new_waffle;
@@ -601,8 +634,7 @@ void Option2()
 //Option 3: 
 void Option3()
 {
-    //prompt user for details
-    
+    //prompt user for details   
 
     string name;
     while (true)
@@ -1420,6 +1452,7 @@ void Option7()
                     var t1 = "";
                     var t2 = "";
                     var t3 = "";
+                    var t4 = "";
 
                     int count2 = 0;
                     foreach (Topping topping in cup.toppings)
@@ -1436,11 +1469,16 @@ void Option7()
                         else if (count2 == 3)
                         {
                             t3 = topping.type;
+
+                        }
+                        else if (count2 == 4)
+                        {
+                            t4 = topping.type;
                         }
 
                     }
 
-                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cup"},{cup.scoops},{""},{""},{f1},{f2},{f3},{t1},{t2},{t3}");
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cup"},{cup.scoops},{""},{""},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
                     
                 }
                 else if (icecream is Cone cone)
@@ -1471,6 +1509,7 @@ void Option7()
                     var t1 = "";
                     var t2 = "";
                     var t3 = "";
+                    var t4 = "";
 
                     int count2 = 0;
                     foreach (Topping topping in cone.toppings)
@@ -1488,10 +1527,14 @@ void Option7()
                         {
                             t3 = topping.type;
                         }
+                        else if (count2 == 4)
+                        {
+                            t4 = topping.type;
+                        }
 
                     }
 
-                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cone"},{cone.scoops},{cone.dipped},{""},{f1},{f2},{f3},{t1},{t2},{t3}");
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cone"},{cone.scoops},{cone.dipped},{""},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
                 }
                 else if (icecream is Waffle waffle)
                 {
@@ -1515,12 +1558,14 @@ void Option7()
                         {
                             f3 = flavour.type;
                         }
+                        
 
                     }
 
                     var t1 = "";
                     var t2 = "";
                     var t3 = "";
+                    var t4 = "";
 
                     int count2 = 0;
                     foreach (Topping topping in waffle.toppings)
@@ -1538,10 +1583,14 @@ void Option7()
                         {
                             t3 = topping.type;
                         }
+                        else if (count2 == 4)
+                        {
+                            t4 = topping.type;
+                        }
 
                     }
 
-                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Waffle"},{waffle.scoops},{""},{waffle.waffleFlavour},{f1},{f2},{f3},{t1},{t2},{t3}");
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Waffle"},{waffle.scoops},{""},{waffle.waffleFlavour},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
                 }
             }
         }

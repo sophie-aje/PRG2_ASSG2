@@ -312,7 +312,26 @@ IceCream MakeIceCreamOrder()
     for (int i = 0; i < numberOfToppings; i++)
     {
         Console.Write($"Enter topping {i + 1}: ");
-        string toppingName = Console.ReadLine();
+        string toppingName;
+        while (true)
+        {
+            // prompt user to enter number of toppings
+            Console.Write("Enter the number of toppings: ");
+
+            // Attempt to convert user input to an integer
+            toppingName = Console.ReadLine();
+
+            try
+            {
+                toppingName = toppingName;
+                break;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid string. Only letters allowed.");
+            }
+        }
+
         toppings.Add(new Topping(toppingName));
     }
 
@@ -351,6 +370,7 @@ IceCream MakeIceCreamOrder()
 
 
 //Option 1: 
+//VALIDATION DONE
 void Option1()
     {
         //reading from customers.csv file
@@ -377,6 +397,7 @@ void Option1()
 
 
 //Option 2: 
+//VALIDATION DONE
 void Option2()
 {
     
@@ -469,11 +490,30 @@ void Option2()
 
 
 //Option 3: 
+//VALIDATION DONE
 void Option3()
 {
     //prompt user for details
-    Console.Write("Enter customer name: ");
-    string name = Console.ReadLine();
+    
+
+    string name;
+    while (true)
+    {
+        Console.Write("Enter customer name: ");
+
+        name = Console.ReadLine();
+
+        try
+        {
+            name = name;
+            break;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input. Please enter a valid string. Only letters allowed.");
+        }
+    }
+
 
     int id = 0;
     bool idCheck = true;
@@ -500,7 +540,7 @@ void Option3()
         }
     }
 
-    DateTime dob = DateTime.MinValue; // Default value
+    DateTime dob = DateTime.MinValue;
     string dobString;
 
     while (true)

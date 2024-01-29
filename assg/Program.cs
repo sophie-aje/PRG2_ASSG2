@@ -484,11 +484,10 @@ void Option2()
     Console.WriteLine("\n---GOLD MEMBER QUEUE---");
     if (goldOrderQueue.Count != 0)
     {
-        Console.WriteLine("Order information:");
-        Console.WriteLine("{0,-7}{1,-20}", "ID", "Time Received");
-
         foreach (Order order in goldOrderQueue)
         {
+            Console.WriteLine("Order information:");
+            Console.WriteLine("{0,-7}{1,-20}", "ID", "Time Received");
             Console.WriteLine("{0,-7}{1,-20}", order.Id, order.timeReceived); // Print order details
 
 
@@ -818,13 +817,14 @@ void Option4()
                 // Check if the customer has a Gold tier
                 if (tierLevel == "Gold")
                 {
-                    newOrder.Id = customer.memberId;
+                    newOrder.Id = goldOrderQueue.Count + 1;
+                    ;
                     goldOrderQueue.Add(newOrder);
                     Console.WriteLine("Added to Gold Order Queue.");
                 }
                 else
                 {
-                    newOrder.Id = customer.memberId;
+                    newOrder.Id = regularOrderQueue.Count + 1;
                     Console.WriteLine("Added to Regular Order Queue.");
                     regularOrderQueue.Add(newOrder);
                 }

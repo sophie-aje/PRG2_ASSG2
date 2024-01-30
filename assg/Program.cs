@@ -243,13 +243,13 @@ IceCream MakeIceCreamOrder()
     while (true)
     {
         // prompt user to enter ice cream order
-        Console.Write("Enter number of toppings (MIN 1 MAX 4): ");
+        Console.Write("Enter number of toppings ( MAX 4): ");
 
         try
         {
             numberOfToppings = Convert.ToInt32(Console.ReadLine());
 
-            if (numberOfToppings >= 1 && numberOfToppings <= 4)
+            if (numberOfToppings >= 0 && numberOfToppings <= 4)
             {
                 break;
             }
@@ -348,8 +348,12 @@ IceCream MakeIceCreamOrder()
             }
         }
     }
+    if (numberOfToppings != 0)
+    {
 
-    Console.WriteLine("\nToppings(+$1 each)\nSprinkles\nMochi\nSago\nOreos\n");
+        Console.WriteLine("\nToppings(+$1 each)\nSprinkles\nMochi\nSago\nOreos\n");
+    }
+
 
     for (int k = 0; k < numberOfToppings; k++)
     {

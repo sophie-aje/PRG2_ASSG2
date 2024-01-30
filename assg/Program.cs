@@ -1,9 +1,6 @@
 //basic features
 //nehaa: option 1,3,4
 //sophie: option 2,5,6
-
-
-
 // orders.csv meant for order histories (inlcudes time received and time fulfilled)
 
 using assg;

@@ -164,9 +164,7 @@ void ReadCustomerCSV()
             pointCard.tier = tier;
             customer.rewards = pointCard;
             pointCards.Add(pointCard);
-        }
-            
-        
+        }                   
     }
 }
 ReadCustomerCSV();
@@ -453,27 +451,27 @@ IceCream MakeIceCreamOrder()
 
 //Option 1: 
 void Option1()
+{
+    //reading from customers.csv file
+    using (StreamReader sr = new StreamReader("customers.csv"))
     {
-        //reading from customers.csv file
-        using (StreamReader sr = new StreamReader("customers.csv"))
+        string? s = sr.ReadLine(); // read the heading
+                                    // display the heading
+        if (s != null)
         {
-            string? s = sr.ReadLine(); // read the heading
-                                       // display the heading
-            if (s != null)
-            {
-                string[] heading = s.Split(',');
-                Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-20}  {4,-17}  {5,-15}",
-                    heading[0], heading[1], heading[2], heading[3], heading[4], heading[5]);
-                // repeat until end of file
-            }
-            while ((s = sr.ReadLine()) != null)
-            {
-                string[] info = s.Split(',');
-                Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-20}  {4,-17}  {5,-15}",
-                    info[0], info[1], info[2], info[3], info[4], info[5]);
-            }
+            string[] heading = s.Split(',');
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-20}  {4,-17}  {5,-15}",
+                heading[0], heading[1], heading[2], heading[3], heading[4], heading[5]);
+            // repeat until end of file
+        }
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] info = s.Split(',');
+            Console.WriteLine("{0,-10}  {1,-10}  {2,-10}  {3,-20}  {4,-17}  {5,-15}",
+                info[0], info[1], info[2], info[3], info[4], info[5]);
         }
     }
+}
 
 
 

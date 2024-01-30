@@ -28,17 +28,24 @@ namespace assg
         {
             if (tier == "Gold" || tier == "Silver")
             {
-                Console.WriteLine("How many points do you want to use to offset the bill?");
-                double amount = Convert.ToDouble(Console.ReadLine());
-                if (amount > points)
+                bool validInput = false;
+
+                while (!validInput)
                 {
-                    Console.WriteLine("Offset amount cannot exceed total points");
-                }
-                else
-                {
-                    points -= Convert.ToInt32(amount); // Deduct redeemed points from the total points
-                    totalBill -= amount * 0.02;
-                    Console.WriteLine($"Final Total Bill Amount: ${totalBill:F2}");
+                    Console.WriteLine("How many points do you want to use to offset the bill?");
+                    double amount = Convert.ToDouble(Console.ReadLine());
+
+                    if (amount > points)
+                    {
+                        Console.WriteLine("Offset amount cannot exceed total points. Please enter a valid amount.");
+                    }
+                    else
+                    {
+                        validInput = true; // Set flag to exit the loop
+                        points -= Convert.ToInt32(amount); // Deduct redeemed points from the total points
+                        totalBill -= amount * 0.02;
+                        Console.WriteLine($"Final Total Bill Amount: ${totalBill:F2}");
+                    }
                 }
             }
             else
@@ -49,10 +56,11 @@ namespace assg
         }
 
 
+
         public void Punch()
         {
             punchCard++;
-            if (punchCard % 10 == 0)
+            if (punchCard >= 10)
             {
                 punchCard = 0;
             }

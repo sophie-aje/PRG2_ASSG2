@@ -41,8 +41,10 @@ List<IceCream> iceCreamList = new List<IceCream>();
 Dictionary<int, List<IceCream>> ordersHistoryDictionary = new Dictionary<int, List<IceCream>>();
 Dictionary<int, List<Order>> orderHistoryDetails = new Dictionary<int, List<Order>>();
 
+// method to read orders.csv file
 void ReadOrdersCSV()
 {
+    // read file using streamreader
     using (StreamReader sr = new StreamReader("orders.csv"))
     {
         sr.ReadLine();
@@ -58,12 +60,12 @@ void ReadOrdersCSV()
             DateTime.TryParse(info[2], out DateTime timeReceived);
             DateTime.TryParse(info[3], out DateTime timeFulfilled);
 
-            // Create an Order object
+            // create order object
             Order order = new Order(orderId, timeReceived);
 
             order.timeFulfilled = timeFulfilled;
 
-            // Assign time fulfilled
+            // put time fulfilled
             order.timeFulfilled = timeFulfilled;
 
             // Add ice cream details to the order

@@ -1106,7 +1106,6 @@ void Option5()
 
 
 // option 6 
-
 void Option6()
 {
     Console.WriteLine("List of Customers: \n");
@@ -1115,15 +1114,13 @@ void Option6()
         Console.WriteLine("{0, -10} {1, -10}", x.name, x.memberId);
     }
 
-    // Prompt user to select a customer
-    Console.Write("\nEnter the Member ID to select a customer: ");        //tries to retrieve a valye associated with selectedmemberId from the dict 
+    Console.Write("\nEnter the Member ID to select a customer: ");  //tries to retrieve a valye associated with selectedmemberId from the dict 
     if (int.TryParse(Console.ReadLine(), out int selectedMemberId))
     {
         Customer selectedCustomer = customerList.Find(customer => customer.memberId == selectedMemberId);
 
-        // Retrieve the selected customer's current order
-        Order selectedOrder = new Order(); // Create an instance of the Order class
-        selectedOrder.Id = selectedMemberId; // Assuming Id is used to store Member ID
+        Order selectedOrder = new Order(); 
+        selectedOrder.Id = selectedMemberId; 
         selectedOrder.iceCreamList = iceCreamList;
 
         Console.WriteLine($"Found orders for Member ID: {selectedMemberId}");
@@ -1189,14 +1186,11 @@ void Option6()
         int option;
         while (true)
         {
-            // prompt user to enter ice cream option
-            Console.WriteLine("Choose an action: \n [1] Modify\n [2] Add new\n [3] Delete existing");
+            Console.WriteLine("\nChoose an action: \n [1] Modify\n [2] Add new\n [3] Delete existing");
             Console.Write("Enter your choice: ");
-
-            // convert user input to an string
             option = Convert.ToInt32(Console.ReadLine());
 
-            try //data validation
+            try 
             {
                 option = option;
                 break;
@@ -1207,71 +1201,59 @@ void Option6()
             }
         }
 
-
         switch (option)
         {
             case 1:
-                // Modify existing ice cream
                 Console.WriteLine($"Total index: {count}");
                 Console.Write("Enter the index of the ice cream to modify: ");
 
-                // initialises .write as modifyIndex, checks if modifyindex is >=1, and checks if modifyindex is =< selectedOrder.iceCreamList.Count
                 if (int.TryParse(Console.ReadLine(), out int modifyIndex) && modifyIndex >= 1 && modifyIndex <= selectedOrder.iceCreamList.Count)
                 {
-                    // Call the ModifyIceCream method on the selected order
                     selectedOrder.ModifyIceCream(modifyIndex - 1);
 
-                    UpdateOrder(regularOrderQueue);
-                    UpdateOrder(goldOrderQueue);
+                    updateOrder(regularOrderQueue);
+                    updateOrder(goldOrderQueue);
 
-                    void UpdateOrder(Queue<Order> orderQueue)
+                    void updateOrder(Queue<Order> orderQueue)
                     {
-                        // Find the order instance in the queue and update it
                         foreach (Order order in orderQueue)
                         {
-                            if (order.Id == selectedMemberId) // Assuming Id is used to identify orders
+                            if (order.Id == selectedMemberId) 
                             {
                                 order.iceCreamList = iceCreamList;
                                 break;
                             }
                         }
                     }
-
                     Console.WriteLine("Order modified successfully...");                   
-
                 }
                 else
                 {
                     Console.WriteLine("Invalid input.");
                 }
                 break;
-
             case 2:
                 IceCream newIceCream = MakeIceCreamOrder();
 
-                AddOrderInQueue(regularOrderQueue, selectedOrder);
-                AddOrderInQueue(goldOrderQueue, selectedOrder);                
+                addNewOrder(regularOrderQueue, selectedOrder);
+                addNewOrder(goldOrderQueue, selectedOrder);                
 
-                void AddOrderInQueue(Queue<Order> orderQueue, Order newOrder)
+                void addNewOrder(Queue<Order> orderQueue, Order newOrder)
                 {
                     Order existingOrder = orderQueue.FirstOrDefault(order => order.Id == selectedMemberId);
 
                     if (existingOrder != null)
                     {
-                        // Update the existing order
                         existingOrder.iceCreamList = newOrder.iceCreamList;
                     }
                     else
                     {
-                        // Add the new order to the queue
                         orderQueue.Enqueue(newOrder);
                     }
                 }
-
                 break;
-
             case 3:
-                Console.Write("Enter the index of the ice cream to delete: ");
+                Console.Write("Enter the index of the ice cream you want to delete: ");
                 if (int.TryParse(Console.ReadLine(), out int deleteIndex) && deleteIndex >= 1 && deleteIndex <= selectedOrder.iceCreamList.Count)
                 {
                     selectedOrder.DeleteIceCream(deleteIndex - 1);
@@ -1324,7 +1306,6 @@ void Option6()
             }
             else if (iceCream is Waffle waffle)
             {
-
                 Console.WriteLine($"\nOption: Waffle");
                 Console.WriteLine($"Scoops: {waffle.scoops}");
                 Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");

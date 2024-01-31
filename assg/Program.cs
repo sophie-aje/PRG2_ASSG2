@@ -1221,10 +1221,10 @@ void Option6()
                     // Call the ModifyIceCream method on the selected order
                     selectedOrder.ModifyIceCream(modifyIndex - 1);
 
-                    UpdateOrderInQueue1(regularOrderQueue);
-                    UpdateOrderInQueue1(goldOrderQueue);
+                    UpdateOrder(regularOrderQueue);
+                    UpdateOrder(goldOrderQueue);
 
-                    void UpdateOrderInQueue1(Queue<Order> orderQueue)
+                    void UpdateOrder(Queue<Order> orderQueue)
                     {
                         // Find the order instance in the queue and update it
                         foreach (Order order in orderQueue)
@@ -1247,19 +1247,13 @@ void Option6()
                 break;
 
             case 2:
-
-                // Add new ice cream
                 IceCream newIceCream = MakeIceCreamOrder();
 
+                AddOrderInQueue(regularOrderQueue, selectedOrder);
+                AddOrderInQueue(goldOrderQueue, selectedOrder);                
 
-
-                UpdateOrderInQueue2(regularOrderQueue, selectedOrder);
-                UpdateOrderInQueue2(goldOrderQueue, selectedOrder);
-                ;
-
-                void UpdateOrderInQueue2(Queue<Order> orderQueue, Order newOrder)
+                void AddOrderInQueue(Queue<Order> orderQueue, Order newOrder)
                 {
-                    // Find the order instance in the queue
                     Order existingOrder = orderQueue.FirstOrDefault(order => order.Id == selectedMemberId);
 
                     if (existingOrder != null)
@@ -1274,15 +1268,12 @@ void Option6()
                     }
                 }
 
-
                 break;
 
             case 3:
-                // Delete existing ice cream
                 Console.Write("Enter the index of the ice cream to delete: ");
                 if (int.TryParse(Console.ReadLine(), out int deleteIndex) && deleteIndex >= 1 && deleteIndex <= selectedOrder.iceCreamList.Count)
                 {
-                    // Call the DeleteIceCream method on the selected order
                     selectedOrder.DeleteIceCream(deleteIndex - 1);
 
                 }
@@ -1293,13 +1284,12 @@ void Option6()
                 break;
 
             default:
-                Console.WriteLine("Invalid action.");
+                Console.WriteLine("Invalid action. Please try again.");
                 break;
         }
 
-        // Display the new updated order
         Console.WriteLine("Updated Order:");
-        foreach (IceCream iceCream in selectedOrder.iceCreamList) //displaying ice cream information
+        foreach (IceCream iceCream in selectedOrder.iceCreamList)
         {
             if (iceCream is Cup cup)
             {
@@ -1310,7 +1300,6 @@ void Option6()
                 {
                     Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
                 }
-
                 Console.WriteLine("Toppings:");
                 foreach (Topping topping in cup.toppings)
                 {
@@ -1327,7 +1316,6 @@ void Option6()
                 {
                     Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
                 }
-
                 Console.WriteLine("Toppings:");
                 foreach (Topping topping in cone.toppings)
                 {
@@ -1345,7 +1333,6 @@ void Option6()
                 {
                     Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
                 }
-
                 Console.WriteLine("Toppings:");
                 foreach (Topping topping in waffle.toppings)
                 {
@@ -1353,17 +1340,11 @@ void Option6()
                 }
             }
         }
-
-
     }
-
     else
     {
         Console.WriteLine("Invalid input. Please enter a valid Member ID.");
     }
-
-
-
 }
 
 //---ADVANCED FEATURES---

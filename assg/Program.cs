@@ -1123,7 +1123,6 @@ void Option6()
         selectedOrder.Id = selectedMemberId; 
         selectedOrder.iceCreamList = iceCreamList;
 
-        Console.WriteLine($"Found orders for Member ID: {selectedMemberId}");
         Console.WriteLine("Order Information:");
 
         int count = 0;

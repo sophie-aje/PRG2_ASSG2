@@ -1895,7 +1895,6 @@ void Option8()
 void DisplayMenu()
 {
     int option;
-
     do
     {
         Console.WriteLine("\nThe I.C. Treats Management System (enter 0 to break)");

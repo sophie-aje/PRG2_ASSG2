@@ -16,7 +16,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
@@ -506,19 +505,16 @@ void PrintOrderDetails(Queue<Order> orderQueue, string queueName, int selectedMe
     if (orderQueue.Count == null) //if orderQueeu is 0, indicating that orderqueue is empty
     {
         Console.WriteLine($"{queueName}");
-        Console.WriteLine("Order information:");
-        Console.WriteLine("{0,-7} {1,-20}", "ID", "Time Received");
     }
 
     bool foundMember = false;
-
     string prem = "";
     foreach (Order order in orderQueue)
     {
         if (order.Id == selectedMemberId)
         {
             foundMember = true;
-            Console.WriteLine("{0,-7}{1,-20}", order.Id, order.timeReceived); // Print order details
+            Console.WriteLine("\n{0,-7}{1,-20}", order.Id, order.timeReceived); // Print order details
 
             foreach (IceCream iceCream in order.iceCreamList) //printing order details
             {
@@ -552,7 +548,7 @@ void PrintOrderDetails(Queue<Order> orderQueue, string queueName, int selectedMe
 
     if (!foundMember) // data validation
     {
-        Console.WriteLine($"\nNo orders found for Member ID in {queueName}: {selectedMemberId}");
+        Console.WriteLine($"\nNo orders found for Member ID {selectedMemberId} in {queueName}.");
     }
 }
 
@@ -617,7 +613,7 @@ void Option1()
 // option 2
 void Option2()
 {
-    Console.WriteLine("\nGOLD MEMBER QUEUE");
+    Console.WriteLine("\n---GOLD MEMBER QUEUE---");
     if (goldOrderQueue.Count != 0)
     {
         Console.WriteLine("Order information:");
@@ -689,7 +685,7 @@ void Option2()
         Console.WriteLine("Nothing in Gold Queue.");
     }
 
-    Console.WriteLine("\nREGULAR MEMBER QUEUE");
+    Console.WriteLine("\n---REGULAR MEMBER QUEUE---");
     if (regularOrderQueue.Count != 0)
     {
         Console.WriteLine("Order Information:");
@@ -1021,13 +1017,10 @@ void Option5()
 
         var keys = ordersHistoryDictionary.Keys.ToList(); //all keys in the dictionary will be put into a list
 
-
-        //Console.WriteLine($"\nID: {selectedMemberId} Time Received : {order.timeReceived} Time Fulfilled : {order.timeFulfilled}"); //printing all order information
-
+        Console.WriteLine("\nDisplaying orders from PAST HISTORY queues..."); //past orders from orders.csv
 
         if (ordersHistoryDictionary.ContainsKey(selectedMemberId))
-        {
-            Console.WriteLine("Displaying orders from PAST HISTORY queues..."); //past orders from orders.csv
+        {           
             iceCreamList = ordersHistoryDictionary[selectedMemberId]; //iceCreamList will contain the value associated
                                                                       //with the key selectedMemberId in the dict 
 
@@ -1086,16 +1079,16 @@ void Option5()
                         Console.WriteLine($"  - {topping.type}");
                     }
                 }
-            }
-            Console.WriteLine("\n\nDisplaying orders from CURRENT queues..."); //orders pullewd from option 2
-            PrintOrderDetails(goldOrderQueue, "GOLD MEMBER QUEUE", selectedMemberId);
-            PrintOrderDetails(regularOrderQueue, "REGULAR MEMBER QUEUE", selectedMemberId);
+            }           
 
         }
         else
         {
-            Console.WriteLine("Invalid Member ID. No orders found for the specified customer.");
+            Console.WriteLine($"No orders found for Member ID {selectedMemberId} in PAST HISTORY QUEUE.");
         }
+        Console.WriteLine("\n\nDisplaying orders from CURRENT queues..."); //orders pullewd from option 2
+        PrintOrderDetails(goldOrderQueue, "GOLD MEMBER QUEUE", selectedMemberId); //updating information into goldorderqueue and regularorderqueue
+        PrintOrderDetails(regularOrderQueue, "REGULAR MEMBER QUEUE", selectedMemberId);
     }
 
     else
@@ -1184,14 +1177,15 @@ void Option6()
         int option;
         while (true)
         {
-            // prompt user to enter ice cream option
-            Console.Write("Choose an action: \n [1] Modify\n [2] Add new\n [3] Delete existing: ");
 
-            // convert user input to an string
-            option = Convert.ToInt32(Console.ReadLine());
 
             try //data validation
             {
+                // prompt user to enter ice cream option
+                Console.Write("Choose an action: \n [1] Modify\n [2] Add new\n [3] Delete existing: ");
+
+                // convert user input to an string
+                option = Convert.ToInt32(Console.ReadLine());
                 option = option;
                 break;
             }
@@ -1204,6 +1198,7 @@ void Option6()
 
         switch (option)
         {
+
             case 1:
                 // Modify existing ice cream
                 Console.Write("Enter the index of the ice cream to modify: ");
@@ -1749,7 +1744,6 @@ void Option8()
         {"Dec", new List<double>()}
     };
 
-    Console.WriteLine();
 
     // Assuming your IceCream class has a constructor that takes option and scoops
     IceCream iceCream;
@@ -1855,8 +1849,6 @@ void Option8()
         }
     }
 
-    double total_month = 0;
-
     foreach (var m in totalCharge)
     {
         string month = m.Key;
@@ -1866,14 +1858,10 @@ void Option8()
         foreach (var charge in charges)
         {
             count += charge;
-            
         }
 
-        total_month += count;
         Console.WriteLine($"{month} {input_year}: ${count.ToString("0.00")}");
     }
-
-    Console.WriteLine($"\nTotal: ${string.Format("{0:0.00}", total_month)}");
 }
 
 

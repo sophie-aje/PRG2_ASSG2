@@ -1221,10 +1221,10 @@ void Option6()
                     // Call the ModifyIceCream method on the selected order
                     selectedOrder.ModifyIceCream(modifyIndex - 1);
 
-                    UpdateOrderInQueue(regularOrderQueue);
-                    UpdateOrderInQueue(goldOrderQueue);
+                    UpdateOrderInQueue1(regularOrderQueue);
+                    UpdateOrderInQueue1(goldOrderQueue);
 
-                    void UpdateOrderInQueue(Queue<Order> orderQueue)
+                    void UpdateOrderInQueue1(Queue<Order> orderQueue)
                     {
                         // Find the order instance in the queue and update it
                         foreach (Order order in orderQueue)
@@ -1238,60 +1238,7 @@ void Option6()
                     }
 
                     Console.WriteLine("Order modified successfully...");
-                    foreach (IceCream iceCream in selectedOrder.iceCreamList) //print ice cream details
-                    {
-                        if (iceCream is Cup cup)
-                        {
-                            Console.WriteLine($"\nOption: Cup");
-                            Console.WriteLine($"Scoops: {cup.scoops}");
-                            Console.WriteLine("Flavours:");
-                            foreach (Flavour flavour in cup.flavours)
-                            {
-                                Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
-                            }
-
-                            Console.WriteLine("Toppings:");
-                            foreach (Topping topping in cup.toppings)
-                            {
-                                Console.WriteLine($"  - {topping.type}");
-                            }
-                        }
-                        else if (iceCream is Cone cone)
-                        {
-                            Console.WriteLine($"\nOption: Cone");
-                            Console.WriteLine($"Scoops: {cone.scoops}");
-                            Console.WriteLine($"Dipped: {cone.dipped}");
-                            Console.WriteLine("Flavours:");
-                            foreach (Flavour flavour in cone.flavours)
-                            {
-                                Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
-                            }
-
-                            Console.WriteLine("Toppings:");
-                            foreach (Topping topping in cone.toppings)
-                            {
-                                Console.WriteLine($"  - {topping.type}");
-                            }
-                        }
-                        else if (iceCream is Waffle waffle)
-                        {
-
-                            Console.WriteLine($"\nOption: Waffle");
-                            Console.WriteLine($"Scoops: {waffle.scoops}");
-                            Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
-                            Console.WriteLine("Flavours:");
-                            foreach (Flavour flavour in waffle.flavours)
-                            {
-                                Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
-                            }
-
-                            Console.WriteLine("Toppings:");
-                            foreach (Topping topping in waffle.toppings)
-                            {
-                                Console.WriteLine($"  - {topping.type}");
-                            }
-                        }
-                    }
+                    
 
                 }
                 else
@@ -1301,9 +1248,34 @@ void Option6()
                 break;
 
             case 2:
+
                 // Add new ice cream
                 IceCream newIceCream = MakeIceCreamOrder();
-                selectedOrder.AddIceCream(newIceCream);
+
+
+
+                UpdateOrderInQueue2(regularOrderQueue, selectedOrder);
+                UpdateOrderInQueue2(goldOrderQueue, selectedOrder);
+                ;
+
+                void UpdateOrderInQueue2(Queue<Order> orderQueue, Order newOrder)
+                {
+                    // Find the order instance in the queue
+                    Order existingOrder = orderQueue.FirstOrDefault(order => order.Id == selectedMemberId);
+
+                    if (existingOrder != null)
+                    {
+                        // Update the existing order
+                        existingOrder.iceCreamList = newOrder.iceCreamList;
+                    }
+                    else
+                    {
+                        // Add the new order to the queue
+                        orderQueue.Enqueue(newOrder);
+                    }
+                }
+
+
                 break;
 
             case 3:

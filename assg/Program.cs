@@ -1185,129 +1185,255 @@ void Option6()
         //    }
         //}
 
-        int option;
-        while (true)
+        if (goldOrderQueue.Count != 0)
         {
-            // prompt user to enter ice cream option
-            Console.Write("\nChoose an action: \n [1] Modify\n [2] Add new\n [3] Delete existing: ");
-
-            // convert user input to an string
-            option = Convert.ToInt32(Console.ReadLine());
-
-            try //data validation
+            int option;
+            while (true)
             {
-                option = option;
-                break;
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Invalid input. Please enter a valid integer.");
-            }
-        }
+                // Prompt user to enter ice cream option
+                Console.Write("\nChoose an action:\n [1] Modify\n [2] Add new\n [3] Delete existing: ");
 
-
-        switch (option)
-        {
-            case 1:
-                // Modify existing ice cream
-                Console.Write("Enter the index of the ice cream to modify: ");
-
-                // initialises .write as modifyIndex, checks if modifyindex is >=1, and checks if modifyindex is =< selectedOrder.iceCreamList.Count
-                if (int.TryParse(Console.ReadLine(), out int modifyIndex) && modifyIndex >= 1 && modifyIndex <= selectedOrder.iceCreamList.Count)
+                // Convert user input to an integer
+                if (int.TryParse(Console.ReadLine(), out option))
                 {
-                    // Call the ModifyIceCream method on the selected order
-                    selectedOrder.ModifyIceCream(modifyIndex - 1);
-                    selectedCustomer.orderHistory[selectedCustomer.orderHistory.Count] = selectedOrder;
+                    // Input successfully converted to an integer
+                    break;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Invalid input. Please enter a valid integer.");
                 }
-                break;
+            }
 
-            case 2:
-                // Add new ice cream
-                IceCream newIceCream = MakeIceCreamOrder();
-                selectedOrder.AddIceCream(newIceCream);
-                break;
 
-            case 3:
-                // Delete existing ice cream
-                Console.Write("Enter the index of the ice cream to delete: ");
-                if (int.TryParse(Console.ReadLine(), out int deleteIndex) && deleteIndex >= 1 && deleteIndex <= selectedOrder.iceCreamList.Count)
+            switch (option)
+            {
+                case 1:
+                    // Modify existing ice cream
+                    Console.Write("Enter the index of the ice cream to modify: ");
+
+                    // initialises .write as modifyIndex, checks if modifyindex is >=1, and checks if modifyindex is =< selectedOrder.iceCreamList.Count
+                    if (int.TryParse(Console.ReadLine(), out int modifyIndex) && modifyIndex >= 1 && modifyIndex <= selectedOrder.iceCreamList.Count)
+                    {
+                        // Call the ModifyIceCream method on the selected order
+                        selectedOrder.ModifyIceCream(modifyIndex - 1);
+                        selectedCustomer.orderHistory[selectedCustomer.orderHistory.Count] = selectedOrder;
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input.");
+                    }
+                    break;
+
+                case 2:
+                    // Add new ice cream
+                    IceCream newIceCream = MakeIceCreamOrder();
+                    selectedOrder.AddIceCream(newIceCream);
+                    break;
+
+                case 3:
+                    // Delete existing ice cream
+                    Console.Write("Enter the index of the ice cream to delete: ");
+                    if (int.TryParse(Console.ReadLine(), out int deleteIndex) && deleteIndex >= 1 && deleteIndex <= selectedOrder.iceCreamList.Count)
+                    {
+                        // Call the DeleteIceCream method on the selected order
+                        selectedOrder.DeleteIceCream(deleteIndex - 1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input.");
+                    }
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid action.");
+                    break;
+            }
+
+            // Display the new updated order
+            Console.WriteLine("Updated Order:");
+            foreach (IceCream iceCream in selectedOrder.iceCreamList) //displaying ice cream information
+            {
+                if (iceCream is Cup cup)
                 {
-                    // Call the DeleteIceCream method on the selected order
-                    selectedOrder.DeleteIceCream(deleteIndex - 1);
+                    Console.WriteLine($"\nOption: Cup");
+                    Console.WriteLine($"Scoops: {cup.scoops}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in cup.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in cup.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+                }
+                else if (iceCream is Cone cone)
+                {
+                    Console.WriteLine($"\nOption: Cone");
+                    Console.WriteLine($"Scoops: {cone.scoops}");
+                    Console.WriteLine($"Dipped: {cone.dipped}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in cone.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in cone.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+                }
+                else if (iceCream is Waffle waffle)
+                {
+
+                    Console.WriteLine($"\nOption: Waffle");
+                    Console.WriteLine($"Scoops: {waffle.scoops}");
+                    Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in waffle.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in waffle.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+                }
+            }
+        }
+        if (regularOrderQueue.Count != 0)
+        {
+            int option;
+            while (true)
+            {
+                // Prompt user to enter ice cream option
+                Console.Write("\nChoose an action:\n [1] Modify\n [2] Add new\n [3] Delete existing: ");
+
+                // Convert user input to an integer
+                if (int.TryParse(Console.ReadLine(), out option))
+                {
+                    // Input successfully converted to an integer
+                    break;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Invalid input. Please enter a valid integer.");
                 }
-                break;
+            }
 
-            default:
-                Console.WriteLine("Invalid action.");
-                break;
+
+            switch (option)
+            {
+                case 1:
+                    // Modify existing ice cream
+                    Console.Write("Enter the index of the ice cream to modify: ");
+
+                    // initialises .write as modifyIndex, checks if modifyindex is >=1, and checks if modifyindex is =< selectedOrder.iceCreamList.Count
+                    if (int.TryParse(Console.ReadLine(), out int modifyIndex) && modifyIndex >= 1 && modifyIndex <= selectedOrder.iceCreamList.Count)
+                    {
+                        // Call the ModifyIceCream method on the selected order
+                        selectedOrder.ModifyIceCream(modifyIndex - 1);
+                        selectedCustomer.orderHistory[selectedCustomer.orderHistory.Count] = selectedOrder;
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input.");
+                    }
+                    break;
+
+                case 2:
+                    // Add new ice cream
+                    IceCream newIceCream = MakeIceCreamOrder();
+                    selectedOrder.AddIceCream(newIceCream);
+                    break;
+
+                case 3:
+                    // Delete existing ice cream
+                    Console.Write("Enter the index of the ice cream to delete: ");
+                    if (int.TryParse(Console.ReadLine(), out int deleteIndex) && deleteIndex >= 1 && deleteIndex <= selectedOrder.iceCreamList.Count)
+                    {
+                        // Call the DeleteIceCream method on the selected order
+                        selectedOrder.DeleteIceCream(deleteIndex - 1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input.");
+                    }
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid action.");
+                    break;
+            }
+
+            // Display the new updated order
+            Console.WriteLine("Updated Order:");
+            foreach (IceCream iceCream in selectedOrder.iceCreamList) //displaying ice cream information
+            {
+                if (iceCream is Cup cup)
+                {
+                    Console.WriteLine($"\nOption: Cup");
+                    Console.WriteLine($"Scoops: {cup.scoops}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in cup.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in cup.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+                }
+                else if (iceCream is Cone cone)
+                {
+                    Console.WriteLine($"\nOption: Cone");
+                    Console.WriteLine($"Scoops: {cone.scoops}");
+                    Console.WriteLine($"Dipped: {cone.dipped}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in cone.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in cone.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+                }
+                else if (iceCream is Waffle waffle)
+                {
+
+                    Console.WriteLine($"\nOption: Waffle");
+                    Console.WriteLine($"Scoops: {waffle.scoops}");
+                    Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
+                    Console.WriteLine("Flavours:");
+                    foreach (Flavour flavour in waffle.flavours)
+                    {
+                        Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                    }
+
+                    Console.WriteLine("Toppings:");
+                    foreach (Topping topping in waffle.toppings)
+                    {
+                        Console.WriteLine($"  - {topping.type}");
+                    }
+                }
+            }
         }
-
-        // Display the new updated order
-        Console.WriteLine("Updated Order:");
-        foreach (IceCream iceCream in selectedOrder.iceCreamList) //displaying ice cream information
-        {
-            if (iceCream is Cup cup)
-            {
-                Console.WriteLine($"\nOption: Cup");
-                Console.WriteLine($"Scoops: {cup.scoops}");
-                Console.WriteLine("Flavours:");
-                foreach (Flavour flavour in cup.flavours)
-                {
-                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
-                }
-
-                Console.WriteLine("Toppings:");
-                foreach (Topping topping in cup.toppings)
-                {
-                    Console.WriteLine($"  - {topping.type}");
-                }
-            }
-            else if (iceCream is Cone cone)
-            {
-                Console.WriteLine($"\nOption: Cone");
-                Console.WriteLine($"Scoops: {cone.scoops}");
-                Console.WriteLine($"Dipped: {cone.dipped}");
-                Console.WriteLine("Flavours:");
-                foreach (Flavour flavour in cone.flavours)
-                {
-                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
-                }
-
-                Console.WriteLine("Toppings:");
-                foreach (Topping topping in cone.toppings)
-                {
-                    Console.WriteLine($"  - {topping.type}");
-                }
-            }
-            else if (iceCream is Waffle waffle)
-            {
-
-                Console.WriteLine($"\nOption: Waffle");
-                Console.WriteLine($"Scoops: {waffle.scoops}");
-                Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
-                Console.WriteLine("Flavours:");
-                foreach (Flavour flavour in waffle.flavours)
-                {
-                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
-                }
-
-                Console.WriteLine("Toppings:");
-                foreach (Topping topping in waffle.toppings)
-                {
-                    Console.WriteLine($"  - {topping.type}");
-                }
-            }
-        }
-
     }
+
+        
 
     else
     {

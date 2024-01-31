@@ -16,6 +16,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
@@ -265,7 +266,7 @@ IceCream MakeIceCreamOrder() //method to make an icecream order
 
     Console.WriteLine("\n---Flavours---");
     Console.WriteLine("\n{0,-17} | {1,-20}", "Regular Flavours", "Premium Flavours (+$2 per scoop)");
-    Console.WriteLine("{0,-17}-|-{1,-20}", "-----------------",  "---------------------------------");
+    Console.WriteLine("{0,-17}-|-{1,-20}", "-----------------", "---------------------------------");
     Console.WriteLine("{0,-17} | {1,-20}", "Vanilla", "Durian");
     Console.WriteLine("{0,-17} | {1,-20}", "Chocolate", "Ube");
     Console.WriteLine("{0,-17} | {1,-20}", "Strawberry", "Sea salt");
@@ -486,7 +487,7 @@ IceCream MakeIceCreamOrder() //method to make an icecream order
         return new_cone;
     }
     else if (option == "3")
-    {        
+    {
         Waffle new_waffle = new Waffle("Waffle", scoops, flavour, toppings, wf);
         iceCreamList.Add(new_waffle);
         return new_waffle;
@@ -595,7 +596,7 @@ void Option1()
     //reading from customers.csv file
     using (StreamReader sr = new StreamReader("customers.csv"))
     {
-        string? s = sr.ReadLine(); \
+        string? s = sr.ReadLine();
         if (s != null)
         {
             string[] heading = s.Split(',');
@@ -821,7 +822,7 @@ void Option3()
         Console.Write("Enter customer date of birth in DD/MM/YYYY format: ");
         dobString = Console.ReadLine();
 
-        
+
         if (DateTime.TryParseExact(dobString, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dob)) //ensuring dob has the right format
                                                                                                                       //parsse the string dobString into the specified date format "dd/MM/yyyy"
                                                                                                                       //store the result in the dob variable
@@ -913,11 +914,31 @@ void Option4()
                     IceCream iceCream = MakeIceCreamOrder();
                     newOrder.AddIceCream(iceCream);
 
-                    Console.Write("\nDo you want to add another ice cream to the order? ('y' / 'n'): ");
-                    string yesno = Console.ReadLine();
+                    bool input = false;
+                    string xyz;
 
-                    if (yesno.ToLower() == "n")
+                    do
                     {
+                        Console.Write("\nDo you want to add another ice cream to the order? ('y' / 'n'): ");
+                        xyz = Console.ReadLine().ToLower();
+
+                        if (xyz == "y" || xyz == "n")
+                        {
+                            input = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Please enter 'y' or 'n'.");
+                        }
+                    } while (!input);
+
+                    if (xyz == "y")
+                    {
+                        Console.WriteLine("Adding another ice cream.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Order is complete.");
                         break;
                     }
                 }
@@ -1003,7 +1024,7 @@ void Option5()
 
         //Console.WriteLine($"\nID: {selectedMemberId} Time Received : {order.timeReceived} Time Fulfilled : {order.timeFulfilled}"); //printing all order information
 
-        
+
         if (ordersHistoryDictionary.ContainsKey(selectedMemberId))
         {
             Console.WriteLine("Displaying orders from PAST HISTORY queues..."); //past orders from orders.csv
@@ -1295,7 +1316,7 @@ void Option6()
 // option 7
 void Option7()
 {
-    
+
     Order currentOrder = null; //initially currentorder is null
     // Check if there are orders in the queue
     if (goldOrderQueue.Count > 0)
@@ -1309,367 +1330,380 @@ void Option7()
     // Display all ice creams in the order
     Console.WriteLine("Ice Creams in the Order:");
     int icecreamcount = 0;
-    foreach (IceCream iceCream in currentOrder.iceCreamList) //displays ice cream order
+    if (currentOrder != null)
     {
-        if (iceCream is Cup cup)
+
+
+        foreach (IceCream iceCream in currentOrder.iceCreamList) //displays ice cream order
         {
-            Console.WriteLine($"\nOption: Cup");
-            Console.WriteLine($"Scoops: {cup.scoops}");
-            Console.WriteLine("Flavours:");
-            foreach (Flavour flavour in cup.flavours)
+            if (iceCream is Cup cup)
             {
-                Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                Console.WriteLine($"\nOption: Cup");
+                Console.WriteLine($"Scoops: {cup.scoops}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in cup.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in cup.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
             }
-
-            Console.WriteLine("Toppings:");
-            foreach (Topping topping in cup.toppings)
+            else if (iceCream is Cone cone)
             {
-                Console.WriteLine($"  - {topping.type}");
+                Console.WriteLine($"\nOption: Cone");
+                Console.WriteLine($"Scoops: {cone.scoops}");
+                Console.WriteLine($"Dipped: {cone.dipped}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in cone.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
+
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in cone.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
             }
-        }
-        else if (iceCream is Cone cone)
-        {
-            Console.WriteLine($"\nOption: Cone");
-            Console.WriteLine($"Scoops: {cone.scoops}");
-            Console.WriteLine($"Dipped: {cone.dipped}");
-            Console.WriteLine("Flavours:");
-            foreach (Flavour flavour in cone.flavours)
+            else if (iceCream is Waffle waffle)
             {
-                Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
-            }
 
-            Console.WriteLine("Toppings:");
-            foreach (Topping topping in cone.toppings)
-            {
-                Console.WriteLine($"  - {topping.type}");
-            }
-        }
-        else if (iceCream is Waffle waffle)
-        {
+                Console.WriteLine($"\nOption: Waffle");
+                Console.WriteLine($"Scoops: {waffle.scoops}");
+                Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
+                Console.WriteLine("Flavours:");
+                foreach (Flavour flavour in waffle.flavours)
+                {
+                    Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
+                }
 
-            Console.WriteLine($"\nOption: Waffle");
-            Console.WriteLine($"Scoops: {waffle.scoops}");
-            Console.WriteLine($"Waffle Flavour: {waffle.waffleFlavour}");
-            Console.WriteLine("Flavours:");
-            foreach (Flavour flavour in waffle.flavours)
-            {
-                Console.WriteLine($"  - {flavour.type} {(flavour.premium ? "(Premium)" : "")}");
-            }
-
-            Console.WriteLine("Toppings:");
-            foreach (Topping topping in waffle.toppings)
-            {
-                Console.WriteLine($"  - {topping.type}");
-            }
-        }
-    }
-
-
-    // Display customer's membership status and points
-    Customer currentCustomer = customerList.FirstOrDefault(c => c.memberId == currentOrder.Id);
-    // Display total bill amount
-
-
-    if (currentCustomer != null)
-    {
-        Console.WriteLine($"Membership Status: {currentCustomer.rewards.tier}");
-        Console.WriteLine($"Points: {currentCustomer.rewards.points}"); //displays customer's tier status and nummber of points
-        double totalBill = currentOrder.CalculateTotal();
-        Console.WriteLine($"Total Bill Amount: ${totalBill:F2}"); // total bill of order
-        // Check if punch card is completed
-        if (currentCustomer.rewards.punchCard == 10)
-        {
-
-
-            totalBill -= currentOrder.iceCreamList[0].CalculatePrice();
-            Console.WriteLine("Congratulations! As a prize for finishing the punch card, you get your 11th ice cream free!");
-            Console.WriteLine($"Discounted Total Bill Amount: ${totalBill:F2}");
-        }
-        else if (currentCustomer.IsBirthday())
-        {
-            //.orderbydescending sorts ice creams in descending order based on their price. takes the first element from the sorted list
-            IceCream mostexic = currentOrder.iceCreamList.OrderByDescending(ic => ic.CalculatePrice()).FirstOrDefault();
-            totalBill -= mostexic.CalculatePrice();
-            Console.WriteLine("Happy birthday! As a reward, you get your most expensive ice cream free!");
-            Console.WriteLine($"Discounted Total Bill Amount: ${totalBill:F2}");
-        }
-        else if (currentCustomer.rewards.punchCard > 11)
-        {
-            // Set the cost of the first ice cream in the order to $0.00
-            currentCustomer.rewards.Punch();
-        }
-
-
-        // Check Pointcard status for redeeming points
-        if (currentCustomer.rewards.tier == "Ordinary")
-        {
-            // Customer begins as an ordinary member
-            currentCustomer.rewards.AddPoints(Convert.ToInt32(totalBill));
-
-            if (currentCustomer.rewards.points >= 100)
-            {
-                currentCustomer.rewards.tier = "Gold";
-            }
-            else if (currentCustomer.rewards.points >= 50)
-            {
-                currentCustomer.rewards.tier = "Silver";
+                Console.WriteLine("Toppings:");
+                foreach (Topping topping in waffle.toppings)
+                {
+                    Console.WriteLine($"  - {topping.type}");
+                }
             }
         }
-        else if (currentCustomer.rewards.tier == "Silver")
-        {
 
-            if (currentCustomer.rewards.points >= 100)
+
+
+
+        // Display customer's membership status and points
+        Customer currentCustomer = customerList.FirstOrDefault(c => c.memberId == currentOrder.Id);
+        // Display total bill amount
+
+
+        if (currentCustomer != null)
+        {
+            Console.WriteLine($"Membership Status: {currentCustomer.rewards.tier}");
+            Console.WriteLine($"Points: {currentCustomer.rewards.points}"); //displays customer's tier status and nummber of points
+            double totalBill = currentOrder.CalculateTotal();
+            Console.WriteLine($"Total Bill Amount: ${totalBill:F2}"); // total bill of order
+                                                                      // Check if punch card is completed
+            if (currentCustomer.rewards.punchCard == 10)
             {
-                currentCustomer.rewards.tier = "Gold";
+
+
+                totalBill -= currentOrder.iceCreamList[0].CalculatePrice();
+                Console.WriteLine("Congratulations! As a prize for finishing the punch card, you get your 11th ice cream free!");
+                Console.WriteLine($"Discounted Total Bill Amount: ${totalBill:F2}");
+            }
+            else if (currentCustomer.IsBirthday())
+            {
+                //.orderbydescending sorts ice creams in descending order based on their price. takes the first element from the sorted list
+                IceCream mostexic = currentOrder.iceCreamList.OrderByDescending(ic => ic.CalculatePrice()).FirstOrDefault();
+                totalBill -= mostexic.CalculatePrice();
+                Console.WriteLine("Happy birthday! As a reward, you get your most expensive ice cream free!");
+                Console.WriteLine($"Discounted Total Bill Amount: ${totalBill:F2}");
+            }
+            else if (currentCustomer.rewards.punchCard > 11)
+            {
+                // Set the cost of the first ice cream in the order to $0.00
+                currentCustomer.rewards.Punch();
+            }
+
+
+            // Check Pointcard status for redeeming points
+            if (currentCustomer.rewards.tier == "Ordinary")
+            {
+                // Customer begins as an ordinary member
+                currentCustomer.rewards.AddPoints(Convert.ToInt32(totalBill));
+
+                if (currentCustomer.rewards.points >= 100)
+                {
+                    currentCustomer.rewards.tier = "Gold";
+                }
+                else if (currentCustomer.rewards.points >= 50)
+                {
+                    currentCustomer.rewards.tier = "Silver";
+                }
+            }
+            else if (currentCustomer.rewards.tier == "Silver")
+            {
+
+                if (currentCustomer.rewards.points >= 100)
+                {
+                    currentCustomer.rewards.tier = "Gold";
+                }
+            }
+            else if (currentCustomer.rewards.tier == "Silver" || currentCustomer.rewards.tier == "Gold")
+            {
+                // Existing silver or gold member
+                currentCustomer.rewards.RedeemPoints(totalBill);
+            }
+
+
+            Console.Write("Press any key to make payment...");
+            Console.ReadKey();
+
+            // Example: Display a payment confirmation message
+            Console.WriteLine("\nPayment successful! Thank you for your purchase.");
+
+            // Increment punch card for every ice cream in the order
+            foreach (IceCream iceCream in currentOrder.iceCreamList)
+            {
+                currentCustomer.rewards.Punch();
+
+                // Earn points and upgrade membership status accordingly
+                currentCustomer.rewards.AddPoints(Convert.ToInt32(totalBill));
+            }
+
+            // Mark the order as fulfilled with the current datetime
+            currentOrder.timeFulfilled = DateTime.Now;
+
+            // Add the fulfilled order object to the customer's order history
+            currentCustomer.orderHistory.Add(currentOrder);
+
+            Console.WriteLine("Order fulfilled and processed successfully.");
+        }
+        else
+        {
+            Console.WriteLine("No orders in the queue.");
+        }
+
+
+
+
+        int orderID = 0;
+        using (StreamReader sr = new StreamReader("orders.csv"))
+        {
+            string? s = sr.ReadLine(); // read the heading
+                                       // display the heading
+            if (s != null)
+            {
+
+            }
+            while ((s = sr.ReadLine()) != null)
+            {
+                string[] content = s.Split(',');
+                orderID = Convert.ToInt32(content[0]) + 1;
             }
         }
-        else if (currentCustomer.rewards.tier == "Silver" || currentCustomer.rewards.tier == "Gold")
+
+
+
+
+        using (StreamWriter sw = new StreamWriter("orders.csv", true))
         {
-            // Existing silver or gold member
-            currentCustomer.rewards.RedeemPoints(totalBill);
+            foreach (IceCream icecream in currentOrder.iceCreamList) // "" an empty string, if customer requests for toppings/flavours, name of those toppings will be updated from "" to that. 
+            {
+                if (icecream is Cup cup)
+                {
+                    var f1 = "";
+                    var f2 = "";
+                    var f3 = "";
+
+                    int count1 = 0;
+                    foreach (Flavour flavour in cup.flavours)
+                    {
+                        count1++;
+                        if (count1 == 1)
+                        {
+                            f1 = flavour.type;
+                        }
+                        else if (count1 == 2)
+                        {
+                            f2 = flavour.type;
+                        }
+                        else if (count1 == 3)
+                        {
+                            f3 = flavour.type;
+                        }
+
+                    }
+
+                    var t1 = "";
+                    var t2 = "";
+                    var t3 = "";
+                    var t4 = "";
+
+                    int count2 = 0;
+                    foreach (Topping topping in cup.toppings)
+                    {
+                        count2++;
+                        if (count2 == 1)
+                        {
+                            t1 = topping.type;
+                        }
+                        else if (count2 == 2)
+                        {
+                            t2 = topping.type;
+                        }
+                        else if (count2 == 3)
+                        {
+                            t3 = topping.type;
+
+                        }
+                        else if (count2 == 4)
+                        {
+                            t4 = topping.type;
+                        }
+
+                    }
+
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cup"},{cup.scoops},{""},{""},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
+
+                }
+                else if (icecream is Cone cone)
+                {
+                    var f1 = "";
+                    var f2 = "";
+                    var f3 = "";
+
+                    int count1 = 0;
+                    foreach (Flavour flavour in cone.flavours)
+                    {
+                        count1++;
+                        if (count1 == 1)
+                        {
+                            f1 = flavour.type;
+                        }
+                        else if (count1 == 2)
+                        {
+                            f2 = flavour.type;
+                        }
+                        else if (count1 == 3)
+                        {
+                            f3 = flavour.type;
+                        }
+
+                    }
+
+                    var t1 = "";
+                    var t2 = "";
+                    var t3 = "";
+                    var t4 = "";
+
+                    int count2 = 0;
+                    foreach (Topping topping in cone.toppings)
+                    {
+                        count2++;
+                        if (count2 == 1)
+                        {
+                            t1 = topping.type;
+                        }
+                        else if (count2 == 2)
+                        {
+                            t2 = topping.type;
+                        }
+                        else if (count2 == 3)
+                        {
+                            t3 = topping.type;
+                        }
+                        else if (count2 == 4)
+                        {
+                            t4 = topping.type;
+                        }
+
+                    }
+
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cone"},{cone.scoops},{cone.dipped},{""},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
+                }
+                else if (icecream is Waffle waffle)
+                {
+                    var f1 = "";
+                    var f2 = "";
+                    var f3 = "";
+
+                    int count1 = 0;
+                    foreach (Flavour flavour in waffle.flavours)
+                    {
+                        count1++;
+                        if (count1 == 1)
+                        {
+                            f1 = flavour.type;
+                        }
+                        else if (count1 == 2)
+                        {
+                            f2 = flavour.type;
+                        }
+                        else if (count1 == 3)
+                        {
+                            f3 = flavour.type;
+                        }
+
+
+                    }
+
+                    var t1 = "";
+                    var t2 = "";
+                    var t3 = "";
+                    var t4 = "";
+
+                    int count2 = 0;
+                    foreach (Topping topping in waffle.toppings)
+                    {
+                        count2++;
+                        if (count2 == 1)
+                        {
+                            t1 = topping.type;
+                        }
+                        else if (count2 == 2)
+                        {
+                            t2 = topping.type;
+                        }
+                        else if (count2 == 3)
+                        {
+                            t3 = topping.type;
+                        }
+                        else if (count2 == 4)
+                        {
+                            t4 = topping.type;
+                        }
+
+                    }
+
+                    sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Waffle"},{waffle.scoops},{""},{waffle.waffleFlavour},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
+                }
+            }
         }
 
-
-        Console.Write("Press any key to make payment...");
-        Console.ReadKey();
-
-        // Example: Display a payment confirmation message
-        Console.WriteLine("\nPayment successful! Thank you for your purchase.");
-
-        // Increment punch card for every ice cream in the order
-        foreach (IceCream iceCream in currentOrder.iceCreamList)
+        string[] lines = File.ReadAllLines("customers.csv");  //updating membership status, points and punchcard points for customers.csv. 
+        for (int i = 1; i < lines.Length; i++)
         {
-            currentCustomer.rewards.Punch();
+            string[] columns = lines[i].Split(',');
+            if (columns.Length >= 2)
+            {
+                int memberId = Convert.ToInt32(columns[1]);
+                if (memberId == currentCustomer.memberId)
+                {
+                    columns[3] = currentCustomer.rewards.tier;
+                    columns[4] = Convert.ToString(currentCustomer.rewards.points);
+                    columns[5] = Convert.ToString(currentCustomer.rewards.punchCard);
+                    lines[i] = string.Join(',', columns);
+                    File.WriteAllLines("customers.csv", lines);
+                }
+            }
 
-            // Earn points and upgrade membership status accordingly
-            currentCustomer.rewards.AddPoints(Convert.ToInt32(totalBill));
         }
-
-        // Mark the order as fulfilled with the current datetime
-        currentOrder.timeFulfilled = DateTime.Now;
-
-        // Add the fulfilled order object to the customer's order history
-        currentCustomer.orderHistory.Add(currentOrder);
-
-        Console.WriteLine("Order fulfilled and processed successfully.");
     }
     else
     {
-        Console.WriteLine("No orders in the queue.");
-    }
-
-
-    int orderID = 0;
-    using (StreamReader sr = new StreamReader("orders.csv"))
-    {
-        string? s = sr.ReadLine(); // read the heading
-                                   // display the heading
-        if (s != null)
-        {
-
-        }
-        while ((s = sr.ReadLine()) != null)
-        {
-            string[] content = s.Split(',');
-            orderID = Convert.ToInt32(content[0]) + 1;
-        }
-    }
-
-
-
-
-    using (StreamWriter sw = new StreamWriter("orders.csv", true))
-    {
-        foreach (IceCream icecream in currentOrder.iceCreamList)
-        {
-            if (icecream is Cup cup)
-            {
-                var f1 = "";
-                var f2 = "";
-                var f3 = "";
-
-                int count1 = 0;
-                foreach (Flavour flavour in cup.flavours)
-                {
-                    count1++;
-                    if (count1 == 1)
-                    {
-                        f1 = flavour.type;
-                    }
-                    else if (count1 == 2)
-                    {
-                        f2 = flavour.type;
-                    }
-                    else if (count1 == 3)
-                    {
-                        f3 = flavour.type;
-                    }
-
-                }
-
-                var t1 = "";
-                var t2 = "";
-                var t3 = "";
-                var t4 = "";
-
-                int count2 = 0;
-                foreach (Topping topping in cup.toppings)
-                {
-                    count2++;
-                    if (count2 == 1)
-                    {
-                        t1 = topping.type;
-                    }
-                    else if (count2 == 2)
-                    {
-                        t2 = topping.type;
-                    }
-                    else if (count2 == 3)
-                    {
-                        t3 = topping.type;
-
-                    }
-                    else if (count2 == 4)
-                    {
-                        t4 = topping.type;
-                    }
-
-                }
-
-                sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cup"},{cup.scoops},{""},{""},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
-
-            }
-            else if (icecream is Cone cone)
-            {
-                var f1 = "";
-                var f2 = "";
-                var f3 = "";
-
-                int count1 = 0;
-                foreach (Flavour flavour in cone.flavours)
-                {
-                    count1++;
-                    if (count1 == 1)
-                    {
-                        f1 = flavour.type;
-                    }
-                    else if (count1 == 2)
-                    {
-                        f2 = flavour.type;
-                    }
-                    else if (count1 == 3)
-                    {
-                        f3 = flavour.type;
-                    }
-
-                }
-
-                var t1 = "";
-                var t2 = "";
-                var t3 = "";
-                var t4 = "";
-
-                int count2 = 0;
-                foreach (Topping topping in cone.toppings)
-                {
-                    count2++;
-                    if (count2 == 1)
-                    {
-                        t1 = topping.type;
-                    }
-                    else if (count2 == 2)
-                    {
-                        t2 = topping.type;
-                    }
-                    else if (count2 == 3)
-                    {
-                        t3 = topping.type;
-                    }
-                    else if (count2 == 4)
-                    {
-                        t4 = topping.type;
-                    }
-
-                }
-
-                sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cone"},{cone.scoops},{cone.dipped},{""},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
-            }
-            else if (icecream is Waffle waffle)
-            {
-                var f1 = "";
-                var f2 = "";
-                var f3 = "";
-
-                int count1 = 0;
-                foreach (Flavour flavour in waffle.flavours)
-                {
-                    count1++;
-                    if (count1 == 1)
-                    {
-                        f1 = flavour.type;
-                    }
-                    else if (count1 == 2)
-                    {
-                        f2 = flavour.type;
-                    }
-                    else if (count1 == 3)
-                    {
-                        f3 = flavour.type;
-                    }
-
-
-                }
-
-                var t1 = "";
-                var t2 = "";
-                var t3 = "";
-                var t4 = "";
-
-                int count2 = 0;
-                foreach (Topping topping in waffle.toppings)
-                {
-                    count2++;
-                    if (count2 == 1)
-                    {
-                        t1 = topping.type;
-                    }
-                    else if (count2 == 2)
-                    {
-                        t2 = topping.type;
-                    }
-                    else if (count2 == 3)
-                    {
-                        t3 = topping.type;
-                    }
-                    else if (count2 == 4)
-                    {
-                        t4 = topping.type;
-                    }
-
-                }
-
-                sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Waffle"},{waffle.scoops},{""},{waffle.waffleFlavour},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
-            }
-        }
-    }
-
-    string[] lines = File.ReadAllLines("customers.csv");
-    for (int i = 1; i < lines.Length; i++)
-    {
-        string[] columns = lines[i].Split(',');
-        if (columns.Length >= 2)
-        {
-            int memberId = Convert.ToInt32(columns[1]);
-            if (memberId == currentCustomer.memberId)
-            {
-                columns[3] = currentCustomer.rewards.tier;
-                columns[4] = Convert.ToString(currentCustomer.rewards.points);
-                columns[5] = Convert.ToString(currentCustomer.rewards.punchCard);
-                lines[i] = string.Join(',', columns);
-                File.WriteAllLines("customers.csv", lines);
-            }
-        }
-
+        Console.WriteLine("There are no orders in the queue as of now.");
     }
 
 }
@@ -1715,6 +1749,7 @@ void Option8()
         {"Dec", new List<double>()}
     };
 
+    Console.WriteLine();
 
     // Assuming your IceCream class has a constructor that takes option and scoops
     IceCream iceCream;
@@ -1820,6 +1855,8 @@ void Option8()
         }
     }
 
+    double total_month = 0;
+
     foreach (var m in totalCharge)
     {
         string month = m.Key;
@@ -1829,10 +1866,14 @@ void Option8()
         foreach (var charge in charges)
         {
             count += charge;
+            
         }
 
+        total_month += count;
         Console.WriteLine($"{month} {input_year}: ${count.ToString("0.00")}");
     }
+
+    Console.WriteLine($"\nTotal: ${string.Format("{0:0.00}", total_month)}");
 }
 
 

@@ -80,7 +80,7 @@ void ReadOrdersCSV()
 
             if (option == "Cone")
             {
-                bool dipped = info[6].Equals("TRUE", StringComparison.OrdinalIgnoreCase);
+                bool dipped = info[6].Equals("TRUE", StringComparison.OrdinalIgnoreCase); // checks if the string equal to true and assigns it to dipped
                 iceCream = new Cone { dipped = dipped };
             }
             else if (option == "Waffle")
@@ -1561,6 +1561,14 @@ void Option7()
                     }
 
                     sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cup"},{cup.scoops},{""},{""},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
+                    if (ordersHistoryDictionary.ContainsKey(currentCustomer.memberId))
+                    {
+                        ordersHistoryDictionary[currentCustomer.memberId].Add(icecream);
+                    }
+                    else
+                    {
+                        ordersHistoryDictionary[currentCustomer.memberId] = new List<IceCream> { icecream };
+                    }
 
                 }
                 else if (icecream is Cone cone)
@@ -1617,6 +1625,14 @@ void Option7()
                     }
 
                     sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Cone"},{cone.scoops},{cone.dipped},{""},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
+                    if (ordersHistoryDictionary.ContainsKey(currentCustomer.memberId))
+                    {
+                        ordersHistoryDictionary[currentCustomer.memberId].Add(icecream);
+                    }
+                    else
+                    {
+                        ordersHistoryDictionary[currentCustomer.memberId] = new List<IceCream> { icecream };
+                    }
                 }
                 else if (icecream is Waffle waffle)
                 {
@@ -1673,9 +1689,21 @@ void Option7()
                     }
 
                     sw.WriteLine($"{orderID},{currentCustomer.memberId},{currentOrder.timeReceived},{currentOrder.timeFulfilled},{"Waffle"},{waffle.scoops},{""},{waffle.waffleFlavour},{f1},{f2},{f3},{t1},{t2},{t3},{t4}");
+                    if (ordersHistoryDictionary.ContainsKey(currentCustomer.memberId))
+                    {
+                        ordersHistoryDictionary[currentCustomer.memberId].Add(icecream);
+                    }
+                    else
+                    {
+                        ordersHistoryDictionary[currentCustomer.memberId] = new List<IceCream> {icecream};
+                    }
                 }
             }
+            
         }
+
+        
+
 
         string[] lines = File.ReadAllLines("customers.csv");  //updating membership status, points and punchcard points for customers.csv. 
         for (int i = 1; i < lines.Length; i++)

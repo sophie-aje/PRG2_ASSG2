@@ -263,8 +263,6 @@ IceCream MakeIceCreamOrder() //method to make an icecream order
         }
     }
 
-
-
     Console.WriteLine("\n---Flavours---");
     Console.WriteLine("\n{0,-17} | {1,-20}", "Regular Flavours", "Premium Flavours (+$2 per scoop)");
     Console.WriteLine("{0,-17}-|-{1,-20}", "-----------------",  "---------------------------------");
@@ -272,13 +270,11 @@ IceCream MakeIceCreamOrder() //method to make an icecream order
     Console.WriteLine("{0,-17} | {1,-20}", "Chocolate", "Ube");
     Console.WriteLine("{0,-17} | {1,-20}", "Strawberry", "Sea salt");
 
-
     string l_flavourName;
     string[] word;
 
     List<Flavour> flavour = new List<Flavour>();
     List<Topping> toppings = new List<Topping>();
-
 
     for (int i = 0; i < scoops; i++)
     {
@@ -358,7 +354,6 @@ IceCream MakeIceCreamOrder() //method to make an icecream order
         Console.WriteLine("{0,-20}", "Sago");
         Console.WriteLine("{0,-20}", "Oreos");
     }
-
 
     for (int k = 0; k < numberOfToppings; k++)
     {
@@ -531,8 +526,6 @@ void PrintOrderDetails(Queue<Order> orderQueue, string queueName, int selectedMe
                 Console.WriteLine($"Scoops: {iceCream.scoops}");
                 Console.WriteLine($"Flavours: ");
 
-                // Assuming flavours is a List<Flavour>
-                //Console.WriteLine("\n{0,-10} {1,-10}", "Type", "Premium");
                 for (int i = 0; i < iceCream.flavours.Count; i++)
                 {
                     Flavour flavour = iceCream.flavours[i];
@@ -546,7 +539,6 @@ void PrintOrderDetails(Queue<Order> orderQueue, string queueName, int selectedMe
                 {
                     Console.WriteLine($"Toppings: ");
                 }
-                // Assuming toppings is an array of Topping
                 for (int i = 0; i < iceCream.toppings.Count; i++)
                 {
                     Topping topping = iceCream.toppings[i];
@@ -603,8 +595,7 @@ void Option1()
     //reading from customers.csv file
     using (StreamReader sr = new StreamReader("customers.csv"))
     {
-        string? s = sr.ReadLine(); // read the heading
-                                   // display the heading
+        string? s = sr.ReadLine(); \
         if (s != null)
         {
             string[] heading = s.Split(',');
@@ -625,7 +616,6 @@ void Option1()
 // option 2
 void Option2()
 {
-
     Console.WriteLine("\nGOLD MEMBER QUEUE");
     if (goldOrderQueue.Count != 0)
     {
@@ -634,7 +624,7 @@ void Option2()
 
         foreach (Order order in goldOrderQueue)
         {
-            Console.WriteLine("{0,-7}{1,-20}", order.Id, order.timeReceived); // Print order details
+            Console.WriteLine("{0,-7}{1,-20}", order.Id, order.timeReceived);
 
 
             foreach (IceCream iceCream in order.iceCreamList)
@@ -777,12 +767,10 @@ void Option2()
 // option 3
 void Option3()
 {
-    //prompt user for details   
-
     string name;
     while (true)
     {
-        Console.Write("Enter customer name: ");
+        Console.Write("Enter customer name: "); //prompt user for details   
 
         name = Console.ReadLine();
 
@@ -797,8 +785,8 @@ void Option3()
         }
     }
 
-    name = string.IsNullOrWhiteSpace(name) ? name : char.ToUpper(name[0]) + name[1..];
-
+    name = string.IsNullOrWhiteSpace(name) ? name : char.ToUpper(name[0]) + name[1..]; //ensures that string name is not null, empty, or contains only whitespace
+                                                                                       //then returns the string with the first letter capitalized
 
     int id = 0;
     bool idCheck = true;
@@ -810,7 +798,7 @@ void Option3()
             Console.Write("Enter a 6-digit integer ID: ");
             id = Convert.ToInt32(Console.ReadLine());
 
-            if (id >= 100000 && id <= 999999)
+            if (id >= 100000 && id <= 999999) //ensure id's first digit is not starting with 0 and that the id contains 6 digits
             {
                 idCheck = false;
             }
@@ -833,7 +821,10 @@ void Option3()
         Console.Write("Enter customer date of birth in DD/MM/YYYY format: ");
         dobString = Console.ReadLine();
 
-        if (DateTime.TryParseExact(dobString, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dob))
+        
+        if (DateTime.TryParseExact(dobString, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dob)) //ensuring dob has the right format
+                                                                                                                      //parsse the string dobString into the specified date format "dd/MM/yyyy"
+                                                                                                                      //store the result in the dob variable
         {
             if (dob < DateTime.Now)
             {
@@ -881,7 +872,6 @@ void Option3()
 }
 
 
-
 // option 4
 void Option4()
 {
@@ -896,32 +886,26 @@ void Option4()
     if (int.TryParse(Console.ReadLine(), out int cus_id))
     {
         // find customer
-        Customer customer = customerList.FirstOrDefault(customer => customer.memberId == cus_id);
+        Customer customer = customerList.FirstOrDefault(customer => customer.memberId == cus_id); //assign memberid to cus_id
 
 
         if (customer != null)
         {
-            // Additional details of the customer
             string customerName = customer.name;
             DateTime customerDob = customer.dob;
             PointCard customerRewards = customer.rewards;
 
-            // Now you can use the additional details as needed
             Console.WriteLine($"Customer Name: {customerName}");
             Console.WriteLine($"Customer Date of Birth: {customerDob}");
 
-            // Check if the customer has a PointCard
             if (customerRewards != null)
             {
-                // Access other details from the PointCard
                 string tierLevel = customerRewards.tier;
                 Console.WriteLine($"Customer Tier Level: {tierLevel}");
 
-                // create a new order for the selected customer
-
+                // new order object
                 Order newOrder = new Order(cus_id, DateTime.Now);
 
-                // Prompt user to enter their ice cream order
                 while (true)
                 {
                     Console.WriteLine("---- Enter your ice cream order details ----");
@@ -938,10 +922,8 @@ void Option4()
                     }
                 }
 
-                // Link the new order to the customer's current order
                 customer.currentOrder = newOrder;
 
-                // Check if the customer has a Gold tier
                 if (tierLevel == "Gold")
                 {
                     newOrder.Id = customer.memberId;
@@ -1313,6 +1295,7 @@ void Option6()
 // option 7
 void Option7()
 {
+    
     Order currentOrder = null; //initially currentorder is null
     // Check if there are orders in the queue
     if (goldOrderQueue.Count > 0)

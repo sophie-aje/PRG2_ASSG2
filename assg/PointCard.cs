@@ -33,19 +33,28 @@ namespace assg
                 while (!validInput)
                 {
                     Console.WriteLine("How many points do you want to use to offset the bill?");
-                    double amount = Convert.ToDouble(Console.ReadLine());
+                    try
+                    {
+                        double amount = Convert.ToDouble(Console.ReadLine());
 
-                    if (amount > points)
-                    {
-                        Console.WriteLine("Offset amount cannot exceed total points. Please enter a valid amount.");
+                        if (amount > points)
+                        {
+                            Console.WriteLine("Offset amount cannot exceed total points. Please enter a valid amount.");
+                        }
+                        else
+                        {
+                            validInput = true; // Set flag to exit the loop
+                            points -= Convert.ToInt32(amount); // Deduct redeemed points from the total points
+                            totalBill -= amount * 0.02;
+                            Console.WriteLine($"Final Total Bill Amount: ${totalBill:F2}");
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        validInput = true; // Set flag to exit the loop
-                        points -= Convert.ToInt32(amount); // Deduct redeemed points from the total points
-                        totalBill -= amount * 0.02;
-                        Console.WriteLine($"Final Total Bill Amount: ${totalBill:F2}");
+                        Console.WriteLine("Please enter a valid number.");
                     }
+
+
                 }
             }
             else
@@ -60,7 +69,7 @@ namespace assg
         public void Punch()
         {
             punchCard++;
-            if (punchCard >= 10)
+            if (punchCard > 10)
             {
                 punchCard = 0;
             }

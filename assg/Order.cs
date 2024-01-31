@@ -11,7 +11,7 @@ namespace assg
         public int Id { get; set; }
 
         public DateTime timeReceived { get; set; } = DateTime.Now;
-        public DateTime? timeFulfilled { get; set; } = DateTime.Now.AddMinutes(15);
+        public DateTime? timeFulfilled { get; set; } 
         public List<IceCream> iceCreamList { get; set; }
         = new List<IceCream>();
 

@@ -1237,8 +1237,7 @@ void Option6()
                         }
                     }
 
-                    Console.WriteLine("Order modified successfully...");
-                    
+                    Console.WriteLine("Order modified successfully...");                   
 
                 }
                 else

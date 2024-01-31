@@ -39,7 +39,6 @@ namespace assg
                 int op;
                 while (true)
                 {
-                    // prompt user to enter ice cream option
                     Console.Write("Enter the ice cream option (CHOOSE 1, 2 OR 3): ");
 
                     try
@@ -67,7 +66,6 @@ namespace assg
                 int scoops;
                 while (true)
                 {
-                    // prompt user to enter ice cream order
                     Console.Write("Enter number of scoops (MIN 1 MAX 3): ");
 
                     try
@@ -94,7 +92,6 @@ namespace assg
                 int numberOfToppings;
                 while (true)
                 {
-                    // prompt user to enter ice cream order
                     Console.Write("Enter number of toppings (MAX 4): ");
 
                     try
@@ -135,10 +132,8 @@ namespace assg
                     {
                         try
                         {
-                            // prompt user to enter flavour
                             Console.Write($"\nEnter flavour {i + 1}: ");
 
-                            // Attempt to convert user input to an integer
                             string flavName = Console.ReadLine();
 
                             string[] words = flavName.Split(' ');
@@ -171,7 +166,6 @@ namespace assg
 
                                 Flavour fv = new Flavour();
 
-                                // Check if the flavour name is one of the specified options
                                 if (c_flavourName == "Durian" || c_flavourName == "Ube" || c_flavourName == "Sea Salt")
                                 {
                                     fv.type = c_flavourName;
@@ -217,7 +211,6 @@ namespace assg
                             Console.Write($"\nEnter topping {k + 1}: ");
                             string toppingName = Console.ReadLine();
 
-                            // Capitalize the first letter of the flavour name
                             string top = char.ToUpper(toppingName[0]) + toppingName.Substring(1);
 
 
@@ -267,17 +260,14 @@ namespace assg
                         Console.Write("\nDo you want the cone dipped? (true/false): ");
                         string userInput = Console.ReadLine();
 
-                        // Validate user input
                         if (userInput == "true" || userInput == "false")
                         {
                             isDipped = bool.Parse(userInput);
-                            // Display the validated input
                             Console.WriteLine($"Cone dipped: {isDipped}");
-                            break; // Exit the loop if input is valid
+                            break; 
                         }
                         else
                         {
-                            // Display an error message for invalid input
                             Console.WriteLine("Invalid input. Please enter 'true' or 'false'.");
                         }
 
@@ -326,22 +316,21 @@ namespace assg
                 if (option == "1")
                 {
                     Cup new_cup = new Cup("Cup", scoops, flavour, toppings);
-                    iceCreamList[iceCreamindex] = new_cup; // Update the ice cream in the list
+                    iceCreamList[iceCreamindex] = new_cup;  // update ice cream in  list
                 }
                 else if (option == "2")
                 {
                     Cone new_cone = new Cone("Cone", scoops, flavour, toppings, isDipped);
-                    iceCreamList[iceCreamindex] = new_cone; // Update the ice cream in the list
+                    iceCreamList[iceCreamindex] = new_cone;  // update ice cream in  list
                 }
                 else if (option == "3")
                 {
                     Waffle new_waffle = new Waffle("Waffle", scoops, flavour, toppings, wf);
-                    iceCreamList[iceCreamindex] = new_waffle; // Update the ice cream in the list
+                    iceCreamList[iceCreamindex] = new_waffle; // update ice cream in  list
                 }
                 else
                 {
                     Console.WriteLine("Error. Please key in options from 1 to 3.");
-                    // Add handling for invalid option if needed
                 }
                 Console.WriteLine("Ice Cream modified successfully.");
             }
@@ -351,7 +340,7 @@ namespace assg
         {
             foreach (Order order in orderQueue)
             {
-                if (order.Id == this.Id) // Assuming Id is used to identify orders
+                if (order.Id == this.Id) 
                 {
                     order.iceCreamList = iceCreamList;
                     break;
